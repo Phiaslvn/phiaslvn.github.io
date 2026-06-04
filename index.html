@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anne Sophia Silvano | Designer & Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Geist+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#080808;
+  --black-2:#0e0e0e;
+  --black-3:#141414;
+  --black-4:#1a1a1a;
+  --black-5:#222;
+  --white:#f4f2ee;
+  --white-2:rgba(244,242,238,0.7);
+  --white-3:rgba(244,242,238,0.35);
+  --white-4:rgba(244,242,238,0.12);
+  --white-5:rgba(244,242,238,0.06);
+  --gold:#c8a96e;
+  --gold-soft:rgba(200,169,110,0.15);
+  --border:rgba(244,242,238,0.08);
+  --border-hover:rgba(244,242,238,0.18);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Outfit',system-ui,sans-serif;
+  --font-mono:'Geist Mono',monospace;
+
+  /* Shape accent colors — inspired by Kokonut UI */
+  --shape-1:rgba(200,169,110,0.18);
+  --shape-2:rgba(180,120,255,0.12);
+  --shape-3:rgba(100,200,255,0.10);
+  --shape-4:rgba(255,160,100,0.10);
+  --shape-5:rgba(100,255,180,0.08);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--font-body);
+  background:var(--black);
+  color:var(--white);
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor{
+  position:fixed;width:8px;height:8px;
+  background:var(--white);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s,width 0.3s,height 0.3s,background 0.3s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:32px;height:32px;
+  border:1px solid rgba(244,242,238,0.4);
+  border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s ease,width 0.3s,height 0.3s,border-color 0.3s;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:180px;opacity:0.55;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.5rem 3.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(8,8,8,0.88);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:var(--font-mono);
+  font-size:0.7rem;font-weight:400;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-family:var(--font-mono);
+  font-size:0.62rem;font-weight:400;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--white-3);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{
+  font-family:var(--font-mono);font-size:0.62rem;
+  font-weight:400;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--black);background:var(--white);
+  padding:0.5rem 1.2rem;border-radius:2px;
+  text-decoration:none;transition:background 0.2s,color 0.2s;
+}
+.nav-cta:hover{background:var(--gold);color:var(--black)}
+
+/* ══════════════════════════════════════
+   HERO — Kokonut Shape Style
+══════════════════════════════════════ */
+.hero{
+  min-height:100vh;
+  padding:0 3.5rem;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  position:relative;overflow:hidden;
+}
+
+/* Subtle grid stays */
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);
+}
+
+/* ── FLOATING SHAPES (Kokonut-inspired) ── */
+.shape{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:0;
+  filter:blur(1px);
+}
+
+/* Large soft blob — top right */
+.shape-1{
+  width:520px;height:520px;
+  top:-120px;right:-100px;
+  background:radial-gradient(circle at 40% 40%, rgba(200,169,110,0.22), transparent 70%);
+  border-radius:60% 40% 70% 30% / 50% 60% 40% 50%;
+  animation:morphBlob1 14s ease-in-out infinite;
+}
+/* Medium ring — left mid */
+.shape-2{
+  width:300px;height:300px;
+  top:35%;left:-80px;
+  background:transparent;
+  border:1px solid rgba(200,169,110,0.15);
+  border-radius:50%;
+  animation:floatY 9s ease-in-out infinite;
+}
+/* Inner fill ring */
+.shape-2b{
+  width:180px;height:180px;
+  top:calc(35% + 60px);left:-20px;
+  background:transparent;
+  border:1px solid rgba(200,169,110,0.09);
+  border-radius:50%;
+  animation:floatY 9s ease-in-out infinite reverse;
+}
+/* Small solid dot — upper left */
+.shape-3{
+  width:90px;height:90px;
+  top:18%;left:8%;
+  background:radial-gradient(circle, rgba(200,169,110,0.28) 0%, transparent 70%);
+  border-radius:50%;
+  animation:floatXY 11s ease-in-out infinite;
+}
+/* Polygon-ish blob — bottom left */
+.shape-4{
+  width:240px;height:240px;
+  bottom:80px;left:5%;
+  background:radial-gradient(circle at 60% 40%, rgba(180,120,255,0.14), transparent 70%);
+  border-radius:30% 70% 50% 50% / 60% 30% 70% 40%;
+  animation:morphBlob2 16s ease-in-out infinite;
+}
+/* Tiny accent dot — right mid */
+.shape-5{
+  width:50px;height:50px;
+  top:58%;right:12%;
+  background:rgba(200,169,110,0.35);
+  border-radius:50%;
+  animation:floatXY 7s ease-in-out infinite reverse;
+}
+/* Large ring outline — bottom right */
+.shape-6{
+  width:420px;height:420px;
+  bottom:-120px;right:-60px;
+  background:transparent;
+  border:1px solid rgba(200,169,110,0.08);
+  border-radius:50%;
+  animation:floatY 13s ease-in-out infinite;
+}
+/* Pill shape — top mid */
+.shape-7{
+  width:160px;height:60px;
+  top:12%;left:40%;
+  background:rgba(200,169,110,0.07);
+  border:1px solid rgba(200,169,110,0.14);
+  border-radius:100px;
+  animation:floatXY 10s ease-in-out infinite;
+  transform:rotate(-18deg);
+}
+/* Scattered tiny squares */
+.shape-8{
+  width:20px;height:20px;
+  top:25%;right:22%;
+  background:rgba(200,169,110,0.25);
+  border-radius:4px;
+  transform:rotate(35deg);
+  animation:spinFloat 12s linear infinite;
+}
+.shape-9{
+  width:14px;height:14px;
+  bottom:30%;left:28%;
+  background:rgba(200,169,110,0.2);
+  border-radius:3px;
+  transform:rotate(15deg);
+  animation:spinFloat 18s linear infinite reverse;
+}
+/* Dashed ring */
+.shape-10{
+  width:200px;height:200px;
+  top:20%;right:18%;
+  background:transparent;
+  border:1px dashed rgba(200,169,110,0.12);
+  border-radius:50%;
+  animation:floatY 15s ease-in-out infinite reverse;
+}
+
+@keyframes morphBlob1{
+  0%,100%{border-radius:60% 40% 70% 30% / 50% 60% 40% 50%;transform:translate(0,0) scale(1)}
+  33%{border-radius:40% 60% 30% 70% / 60% 40% 60% 40%;transform:translate(-20px,15px) scale(1.03)}
+  66%{border-radius:70% 30% 50% 50% / 40% 70% 30% 60%;transform:translate(10px,-20px) scale(0.97)}
+}
+@keyframes morphBlob2{
+  0%,100%{border-radius:30% 70% 50% 50% / 60% 30% 70% 40%;transform:translate(0,0)}
+  50%{border-radius:70% 30% 30% 70% / 50% 60% 40% 50%;transform:translate(15px,-25px)}
+}
+@keyframes floatY{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-24px)}
+}
+@keyframes floatXY{
+  0%,100%{transform:translate(0,0)}
+  25%{transform:translate(10px,-14px)}
+  50%{transform:translate(-8px,-22px)}
+  75%{transform:translate(14px,-8px)}
+}
+@keyframes spinFloat{
+  0%{transform:rotate(0deg) translate(0,0)}
+  50%{transform:rotate(180deg) translate(6px,-10px)}
+  100%{transform:rotate(360deg) translate(0,0)}
+}
+
+.hero-inner{position:relative;z-index:2;max-width:900px}
+
+.hero-eyebrow{
+  display:flex;align-items:center;gap:1rem;
+  font-family:var(--font-mono);font-size:0.65rem;
+  font-weight:400;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;
+}
+.hero-eyebrow::before{
+  content:'';display:block;width:40px;height:1px;background:var(--gold);
+}
+
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(3.5rem,7vw,7rem);
+  font-weight:300;line-height:1.02;
+  letter-spacing:-0.02em;
+  margin-bottom:0.5rem;
+}
+.hero h1 em{font-style:italic;color:var(--white-2)}
+.hero h1 strong{font-weight:600}
+
+.hero-subtitle{
+  font-family:var(--font-display);
+  font-size:clamp(1.2rem,2.5vw,2rem);
+  font-weight:300;font-style:italic;
+  color:var(--gold);margin-bottom:2.5rem;
+  letter-spacing:0.01em;
+}
+
+.hero-desc{
+  max-width:520px;
+  font-size:0.9rem;font-weight:300;
+  color:var(--white-2);line-height:1.85;
+  margin-bottom:3rem;
+}
+
+.hero-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--font-mono);font-size:0.62rem;
+  font-weight:400;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+  border:1px solid var(--border-hover);
+  padding:0.75rem 1.6rem;border-radius:2px;
+  transition:all 0.25s;
+}
+.btn-ghost:hover{border-color:var(--white);background:var(--white-5)}
+.btn-solid{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--font-mono);font-size:0.62rem;
+  font-weight:400;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--black);background:var(--white);
+  text-decoration:none;
+  padding:0.75rem 1.6rem;border-radius:2px;
+  transition:all 0.25s;border:1px solid var(--white);
+}
+.btn-solid:hover{background:var(--gold);border-color:var(--gold)}
+
+/* Floating badge */
+.hero-badge{
+  position:absolute;right:3.5rem;bottom:4rem;
+  width:110px;height:110px;
+  border:1px solid var(--border-hover);
+  border-radius:50%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0.2rem;
+  animation:rotateBadge 12s linear infinite;
+  z-index:2;
+}
+@keyframes rotateBadge{to{transform:rotate(360deg)}}
+.hero-badge svg{animation:rotateBadge 12s linear infinite reverse}
+.hero-badge-center{
+  position:absolute;
+  font-size:1.4rem;
+  animation:rotateBadge 12s linear infinite reverse;
+}
+
+/* Scroll indicator */
+.scroll-hint{
+  position:absolute;left:3.5rem;bottom:3rem;
+  display:flex;align-items:center;gap:1rem;
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.2em;text-transform:uppercase;color:var(--white-3);
+  writing-mode:vertical-rl;
+  animation:fadeInUp 1.5s 1s both;
+  z-index:2;
+}
+.scroll-hint::after{
+  content:'';display:block;width:1px;height:60px;
+  background:linear-gradient(var(--white-3),transparent);
+  margin-top:0.5rem;
+}
+
+/* ── SECTION SHARED ── */
+section{position:relative;z-index:2}
+.section-inner{padding:7rem 3.5rem}
+
+.s-label{
+  font-family:var(--font-mono);font-size:0.6rem;
+  font-weight:400;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.s-label::before{content:'';width:28px;height:1px;background:var(--gold)}
+
+.s-title{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,4vw,3.5rem);
+  font-weight:300;letter-spacing:-0.01em;
+  line-height:1.1;margin-bottom:4rem;
+}
+.s-title em{font-style:italic;color:var(--white-2)}
+
+/* ── SKILLS ── */
+#skills{background:var(--black-2);border-top:1px solid var(--border)}
+
+.skills-wrap{
+  display:grid;grid-template-columns:1fr 2fr;
+  gap:5rem;align-items:start;
+}
+.skills-intro p{
+  font-size:0.875rem;font-weight:300;
+  color:var(--white-2);line-height:1.9;
+  margin-bottom:1.5rem;
+}
+.skills-categories{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.skill-cat{
+  background:var(--black-2);padding:1.75rem 2rem;
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:1.5rem;align-items:center;
+  border:1px solid transparent;
+  transition:border-color 0.2s,background 0.2s;cursor:default;
+}
+.skill-cat:hover{background:var(--black-3);border-color:var(--border-hover)}
+.skill-cat:hover .skill-cat-bar-fill{background:var(--gold)}
+.skill-cat-icon{
+  width:38px;height:38px;border:1px solid var(--border-hover);
+  border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.skill-cat-info h4{font-size:0.85rem;font-weight:500;letter-spacing:0.02em;margin-bottom:0.3rem}
+.skill-cat-tags{display:flex;flex-wrap:wrap;gap:0.3rem}
+.skill-cat-tag{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.08em;padding:0.15rem 0.55rem;
+  border:1px solid var(--border-hover);border-radius:2px;color:var(--white-3);
+}
+.skill-cat-level{font-family:var(--font-mono);font-size:0.6rem;color:var(--white-3);text-align:right;white-space:nowrap}
+.skill-cat-bar{width:60px;height:2px;background:var(--white-4);border-radius:1px;margin-top:0.3rem;margin-left:auto}
+.skill-cat-bar-fill{height:100%;border-radius:1px;background:var(--white-2);transition:background 0.2s}
+
+/* ── ABOUT ── */
+#about{background:var(--black);border-top:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.about-photo{position:relative}
+.photo-frame{
+  aspect-ratio:3/4;background:var(--black-3);
+  border:1px solid var(--border-hover);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.photo-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-frame-corner{position:absolute;width:20px;height:20px;border-color:var(--gold);border-style:solid}
+.corner-tl{top:12px;left:12px;border-width:1px 0 0 1px}
+.corner-tr{top:12px;right:12px;border-width:1px 1px 0 0}
+.corner-bl{bottom:12px;left:12px;border-width:0 0 1px 1px}
+.corner-br{bottom:12px;right:12px;border-width:0 1px 1px 0}
+.photo-monogram{font-family:var(--font-display);font-size:8rem;font-weight:300;font-style:italic;color:var(--white-4);line-height:1;user-select:none}
+.about-info{display:flex;flex-direction:column;gap:2rem}
+.about-quote{
+  font-family:var(--font-display);font-size:clamp(1.3rem,2vw,1.7rem);
+  font-weight:300;font-style:italic;line-height:1.5;color:var(--white-2);
+  padding-left:1.5rem;border-left:1px solid var(--gold);
+}
+.about-body{font-size:0.875rem;font-weight:300;color:var(--white-2);line-height:1.9}
+.about-body p+p{margin-top:1rem}
+.about-meta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+.meta-item{background:var(--black-2);padding:1.25rem 1.5rem}
+.meta-label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--white-3);margin-bottom:0.35rem}
+.meta-val{font-size:0.85rem;font-weight:400;color:var(--white)}
+
+/* ── EXPERTISE ── */
+#expertise{background:var(--black-2);border-top:1px solid var(--border)}
+.expertise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.exp-card{
+  background:var(--black-2);padding:2.25rem 1.75rem;
+  position:relative;overflow:hidden;transition:background 0.25s;
+}
+.exp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform 0.4s;
+}
+.exp-card:hover::before{transform:scaleX(1)}
+.exp-card:hover{background:var(--black-3)}
+.exp-num{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.2em;color:var(--white-4);margin-bottom:1.5rem}
+.exp-icon{font-size:1.6rem;margin-bottom:1.25rem;display:block}
+.exp-card h3{font-size:0.9rem;font-weight:500;letter-spacing:0.02em;margin-bottom:0.75rem}
+.exp-card p{font-size:0.8rem;font-weight:300;color:var(--white-3);line-height:1.8;margin-bottom:1.25rem}
+.exp-stack{display:flex;flex-wrap:wrap;gap:0.35rem}
+.exp-tag{
+  font-family:var(--font-mono);font-size:0.56rem;
+  letter-spacing:0.08em;padding:0.2rem 0.6rem;
+  border:1px solid var(--border-hover);color:var(--white-3);border-radius:1px;
+  transition:border-color 0.2s,color 0.2s;
+}
+.exp-card:hover .exp-tag{border-color:var(--gold);color:var(--white-2)}
+
+/* ── WORK ── */
+#work{background:var(--black);border-top:1px solid var(--border)}
+.work-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.work-item{
+  background:var(--black);
+  display:grid;grid-template-columns:90px 1fr auto;
+  gap:2rem;align-items:center;padding:1.75rem 2rem;
+  border:1px solid transparent;transition:border-color 0.2s,background 0.2s;
+  text-decoration:none;color:inherit;cursor:default;
+}
+.work-item:hover{background:var(--black-2);border-color:var(--border-hover)}
+.work-item:hover .work-arrow{opacity:1;transform:translateX(0)}
+.work-num{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.18em;color:var(--white-4)}
+.work-type{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.35rem}
+.work-title{font-size:1.05rem;font-weight:400;margin-bottom:0.25rem;letter-spacing:0.01em}
+.work-desc{font-size:0.78rem;font-weight:300;color:var(--white-3)}
+.work-tags{display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:flex-end}
+.work-tag{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.08em;padding:0.2rem 0.65rem;border:1px solid var(--border-hover);color:var(--white-3);border-radius:1px}
+.work-arrow{opacity:0;transform:translateX(-6px);transition:opacity 0.2s,transform 0.2s;color:var(--gold);font-size:1.1rem}
+
+/* ── GALLERY4-STYLE CAROUSEL ── */
+.gallery-carousel{
+  position:relative;
+  margin-top:3rem;
+}
+
+/* Navigation row */
+.gallery-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.gallery-nav-label{
+  font-family:var(--font-mono);font-size:0.6rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--white-3);
+}
+.gallery-nav-label span{color:var(--gold)}
+.gallery-nav-btns{display:flex;gap:0.5rem}
+.gallery-nav-btn{
+  width:38px;height:38px;
+  border:1px solid var(--border-hover);
+  background:transparent;
+  color:var(--white-2);
+  border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:none;
+  transition:border-color 0.2s,background 0.2s,color 0.2s;
+}
+.gallery-nav-btn:hover{
+  border-color:var(--gold);
+  background:var(--gold-soft);
+  color:var(--gold);
+}
+.gallery-nav-btn:disabled{opacity:0.25;pointer-events:none}
+
+/* Viewport — clips the sliding track */
+.gallery-viewport{
+  overflow:hidden;
+  width:100%;
+}
+
+/* Sliding track — holds all "pages" side by side */
+.gallery-track{
+  display:flex;
+  transition:transform 0.55s cubic-bezier(0.16,1,0.3,1);
+  will-change:transform;
+}
+
+/* Each "page" = one full gallery grid view */
+.gallery-page{
+  min-width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:220px 220px;
+  gap:3px;
+}
+
+/* Feature card — spans 2 rows on the left */
+.gallery-card{
+  position:relative;
+  overflow:hidden;
+  background:var(--black-3);
+  cursor:none;
+}
+.gallery-card.featured{
+  grid-row:span 2;
+}
+.gallery-card img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  filter:brightness(0.85);
+}
+.gallery-card:hover img{
+  transform:scale(1.06);
+  filter:brightness(1);
+}
+
+/* Overlay — always visible gradient at bottom, content slides up on hover */
+.gallery-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,
+    rgba(8,8,8,0.95) 0%,
+    rgba(8,8,8,0.6) 40%,
+    transparent 70%
+  );
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:1.4rem 1.4rem;
+  transition:background 0.35s;
+}
+.gallery-card:hover .gallery-card-overlay{
+  background:linear-gradient(to top,
+    rgba(8,8,8,0.97) 0%,
+    rgba(8,8,8,0.75) 50%,
+    transparent 80%
+  );
+}
+.gallery-card-tag{
+  font-family:var(--font-mono);font-size:0.54rem;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.4rem;
+  transform:translateY(4px);
+  transition:transform 0.35s;
+}
+.gallery-card:hover .gallery-card-tag{transform:translateY(0)}
+
+.gallery-card-title{
+  font-family:var(--font-display);
+  font-size:1.05rem;font-weight:400;font-style:italic;
+  color:var(--white);line-height:1.3;
+  margin-bottom:0.5rem;
+}
+.gallery-card-desc{
+  font-family:var(--font-body);
+  font-size:0.72rem;font-weight:300;
+  color:var(--white-2);line-height:1.6;
+  margin-bottom:0.75rem;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.35s;
+  opacity:0;
+}
+.gallery-card:hover .gallery-card-desc{
+  max-height:80px;
+  opacity:1;
+}
+.gallery-card-read{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:var(--font-mono);font-size:0.56rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+  opacity:0;transform:translateY(6px);
+  transition:opacity 0.3s 0.05s, transform 0.3s 0.05s;
+}
+.gallery-card:hover .gallery-card-read{
+  opacity:1;transform:translateY(0);
+}
+.gallery-card-read::after{
+  content:'→';
+  transition:transform 0.2s;
+}
+.gallery-card-read:hover::after{transform:translateX(4px)}
+
+/* Corner accent lines (like photo-frame corners) */
+.gallery-card::before,.gallery-card::after{
+  content:'';position:absolute;
+  width:16px;height:16px;
+  border-color:var(--gold);border-style:solid;
+  opacity:0;transition:opacity 0.3s;
+  z-index:2;pointer-events:none;
+}
+.gallery-card::before{top:10px;left:10px;border-width:1px 0 0 1px}
+.gallery-card::after{bottom:10px;right:10px;border-width:0 1px 1px 0}
+.gallery-card:hover::before,.gallery-card:hover::after{opacity:1}
+
+/* Placeholder for missing images */
+.gallery-placeholder{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0.5rem;
+  background:var(--black-3);
+  color:var(--white-4);
+}
+.gallery-placeholder-icon{font-size:2rem;opacity:0.4}
+.gallery-placeholder-text{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  opacity:0.4;
+}
+
+/* Dot indicators */
+.gallery-dots{
+  display:flex;gap:0.5rem;
+  justify-content:center;
+  margin-top:1.25rem;
+}
+.gallery-dot{
+  width:24px;height:2px;
+  background:var(--white-4);
+  border-radius:1px;
+  cursor:none;
+  transition:background 0.2s,width 0.2s;
+}
+.gallery-dot.active{
+  background:var(--gold);
+  width:40px;
+}
+
+/* ── EXPERIENCE ── */
+#experience{background:var(--black-2);border-top:1px solid var(--border)}
+.exp-timeline{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.tl-group-label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-3);margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.tl-entry{padding:1.75rem 0;border-bottom:1px solid var(--border)}
+.tl-entry:last-child{border-bottom:none}
+.tl-year{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;color:var(--gold);margin-bottom:0.5rem}
+.tl-role{font-size:0.95rem;font-weight:500;margin-bottom:0.25rem}
+.tl-org{font-size:0.78rem;font-weight:300;color:var(--white-3);margin-bottom:1rem}
+.tl-points{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.tl-points li{font-size:0.8rem;font-weight:300;color:var(--white-2);padding-left:1.1rem;position:relative;line-height:1.7}
+.tl-points li::before{content:'→';position:absolute;left:0;color:var(--white-4);font-size:0.7rem;top:0.05rem}
+
+/* ── TOOLS MARQUEE ── */
+#tools{
+  background:var(--black-3);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3rem 0;overflow:hidden;
+}
+.marquee-track{display:flex;gap:0;animation:marquee 22s linear infinite;width:max-content}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.marquee-item{
+  display:flex;align-items:center;gap:1.5rem;padding:0 2.5rem;
+  border-right:1px solid var(--border);white-space:nowrap;
+  font-family:var(--font-mono);font-size:0.65rem;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--white-3);transition:color 0.2s;
+}
+.marquee-item:hover{color:var(--white)}
+.marquee-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:0.5}
+
+/* ── CONTACT ── */
+#contact{background:var(--black);border-top:1px solid var(--border)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.contact-cta h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);font-weight:300;line-height:1.15;margin-bottom:1.5rem;letter-spacing:-0.01em}
+.contact-cta h2 em{font-style:italic;color:var(--gold)}
+.contact-cta p{font-size:0.875rem;font-weight:300;color:var(--white-2);line-height:1.9;margin-bottom:2.5rem;max-width:380px}
+.contact-links{display:flex;flex-direction:column;gap:0}
+.c-link{
+  display:flex;align-items:center;gap:1.25rem;padding:1.1rem 0;
+  border-bottom:1px solid var(--border);text-decoration:none;color:var(--white-2);
+  font-size:0.825rem;font-weight:300;transition:color 0.2s;position:relative;
+}
+.c-link::before{
+  content:'';position:absolute;left:0;right:0;bottom:-1px;
+  height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.35s;
+}
+.c-link:hover{color:var(--white)}
+.c-link:hover::before{transform:scaleX(1)}
+.c-link:hover .c-link-icon{border-color:var(--gold);color:var(--gold)}
+.c-link-icon{
+  width:32px;height:32px;border:1px solid var(--border-hover);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;flex-shrink:0;transition:border-color 0.2s,color 0.2s;
+  font-family:var(--font-mono);
+}
+.contact-form{display:flex;flex-direction:column;gap:0}
+.f-group{display:flex;flex-direction:column;border-bottom:1px solid var(--border);padding-bottom:0}
+.f-group:focus-within{border-bottom-color:var(--gold)}
+.f-group label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-4);padding-top:1.25rem;transition:color 0.2s}
+.f-group:focus-within label{color:var(--gold)}
+.f-group input,.f-group textarea{font-family:var(--font-body);font-size:0.875rem;font-weight:300;color:var(--white);background:transparent;border:none;outline:none;padding:0.5rem 0 1.25rem;resize:none;caret-color:var(--gold)}
+.f-group input::placeholder,.f-group textarea::placeholder{color:var(--white-4)}
+.f-group textarea{min-height:90px}
+.f-submit{
+  margin-top:2rem;align-self:flex-start;
+  font-family:var(--font-mono);font-size:0.62rem;
+  font-weight:400;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--black);background:var(--white);
+  border:none;padding:0.85rem 2rem;border-radius:2px;
+  cursor:none;transition:background 0.2s;
+}
+.f-submit:hover{background:var(--gold)}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--black-2);border-top:1px solid var(--border);
+  padding:2rem 3.5rem;display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:2;
+}
+.footer-copy{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.12em;color:var(--white-3)}
+.footer-sig{font-family:var(--font-display);font-size:1rem;font-style:italic;color:var(--white-3)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:none}
+
+.hero-eyebrow{animation:fadeInUp 0.8s 0.2s both}
+.hero h1{animation:fadeInUp 0.9s 0.35s both}
+.hero-subtitle{animation:fadeInUp 0.9s 0.5s both}
+.hero-desc{animation:fadeInUp 0.9s 0.65s both}
+.hero-actions{animation:fadeInUp 0.9s 0.8s both}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:1rem 1.5rem}
+  .nav-links,.nav-cta{display:none}
+  .section-inner{padding:5rem 1.5rem}
+  .hero{padding:0 1.5rem}
+  .hero h1{font-size:3rem}
+  .skills-wrap,.about-grid,.contact-grid,.exp-timeline{grid-template-columns:1fr;gap:2.5rem}
+  .expertise-grid{grid-template-columns:1fr}
+  .work-item{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
+  .work-tags{grid-column:2;justify-content:flex-start}
+  .work-arrow{display:none}
+  .hero-badge,.scroll-hint{display:none}
+  footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.5rem}
+  .shape{opacity:0.5}
+  .shape-1{width:280px;height:280px;top:-60px;right:-60px}
+  .shape-4{display:none}
+  .shape-6{width:220px;height:220px}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">YN<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+
+  <!-- Kokonut-style floating shapes -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-2b"></div>
+  <div class="shape shape-3"></div>
+  <div class="shape shape-4"></div>
+  <div class="shape shape-5"></div>
+  <div class="shape shape-6"></div>
+  <div class="shape shape-7"></div>
+  <div class="shape shape-8"></div>
+  <div class="shape shape-9"></div>
+  <div class="shape shape-10"></div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow">BS Information Technology · Fresh Graduate · Open to Opportunities</div>
+    <h1>
+      <strong>Designer</strong><br>
+      <em>&amp; Developer</em><br>
+      <strong>at Heart.</strong>
+    </h1>
+    <div class="hero-subtitle">— Front-End · UI/UX · Graphic &amp; Print</div>
+    <p class="hero-desc">
+      I bridge pixel-perfect design and clean front-end code. From high-fidelity mockups to production-ready interfaces — and real print machinery on the shop floor.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-solid">View Projects →</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-badge" aria-hidden="true">
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <defs>
+        <path id="circle" d="M55,55 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"/>
+      </defs>
+      <text font-family="'Geist Mono',monospace" font-size="8.5" letter-spacing="3.5" fill="rgba(200,169,110,0.6)">
+        <textPath href="#circle">AVAILABLE · FOR · HIRE · 2025 · IT GRADUATE ·</textPath>
+      </text>
+    </svg>
+    <span class="hero-badge-center">✦</span>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">Scroll</div>
+</section>
+
+<!-- SKILLS HIGHLIGHT -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="s-label">01 — Core Competencies</div>
+    <div class="s-title">What I <em>bring to the table</em></div>
+    <div class="skills-wrap">
+      <div class="skills-intro">
+        <p>A dual-track skill set that's rare in fresh graduates. Equal comfort in visual design tools and front-end code, backed by real production experience in a professional print environment.</p>
+        <p style="margin-top:1rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold)">Hire me! Rate my skill!</p>
+      </div>
+      <div class="skills-categories">
+        <div class="skill-cat">
+          <div class="skill-cat-icon">🎨</div>
+          <div class="skill-cat-info">
+            <h4>UI/UX Design &amp; Mockups</h4>
+            <div class="skill-cat-tags">
+              <span class="skill-cat-tag">Figma</span><span class="skill-cat-tag">Wireframing</span><span class="skill-cat-tag">Prototyping</span><span class="skill-cat-tag">User Flow</span><span class="skill-cat-tag">Color Theory</span>
+            </div>
+          </div>
+          <div class="skill-cat-level"><div>Strong</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:85%"></div></div></div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-icon">💻</div>
+          <div class="skill-cat-info">
+            <h4>Front-End Development</h4>
+            <div class="skill-cat-tags">
+              <span class="skill-cat-tag">HTML5</span><span class="skill-cat-tag">CSS3</span><span class="skill-cat-tag">JavaScript</span><span class="skill-cat-tag">Responsive</span><span class="skill-cat-tag">Bootstrap</span>
+            </div>
+          </div>
+          <div class="skill-cat-level"><div>Proficient</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:75%"></div></div></div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-icon">🖼️</div>
+          <div class="skill-cat-info">
+            <h4>Graphic Design</h4>
+            <div class="skill-cat-tags">
+              <span class="skill-cat-tag">Photoshop</span><span class="skill-cat-tag">CorelDRAW</span><span class="skill-cat-tag">Typography</span><span class="skill-cat-tag">Layout</span><span class="skill-cat-tag">Branding</span>
+            </div>
+          </div>
+          <div class="skill-cat-level"><div>Advanced</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:88%"></div></div></div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-icon">🖨️</div>
+          <div class="skill-cat-info">
+            <h4>Print Production</h4>
+            <div class="skill-cat-tags">
+              <span class="skill-cat-tag">Full Sublimation</span><span class="skill-cat-tag">Spot Sublimation</span><span class="skill-cat-tag">DTF</span><span class="skill-cat-tag">Sticker Print</span>
+            </div>
+          </div>
+          <div class="skill-cat-level"><div>Hands-on</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:82%"></div></div></div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-icon">🗄️</div>
+          <div class="skill-cat-info">
+            <h4>Database &amp; Back-End</h4>
+            <div class="skill-cat-tags">
+              <span class="skill-cat-tag">MySQL</span><span class="skill-cat-tag">DB Design</span><span class="skill-cat-tag">SQL</span><span class="skill-cat-tag">PHP basic</span><span class="skill-cat-tag">Schema Design</span>
+            </div>
+          </div>
+          <div class="skill-cat-level"><div>Functional</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:45%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="s-label">02 — About</div>
+    <div class="about-grid reveal">
+      <div class="about-photo">
+        <div class="photo-frame">
+          <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780555392/phia_sqwqht.jpg" alt="Photo of Anne Sophia Silvano">
+          <div class="photo-frame-corner corner-tl"></div>
+          <div class="photo-frame-corner corner-tr"></div>
+          <div class="photo-frame-corner corner-bl"></div>
+          <div class="photo-frame-corner corner-br"></div>
+        </div>
+      </div>
+      <div class="about-info">
+        <div class="about-quote">"I don't just build websites. I design experiences that communicate, engage, and leave an impression."</div>
+        <div class="about-body">
+          <p>A graduate with a <strong>Bachelor of Science in Information Technology</strong>. My strength lies where design meets development.</p>
+          <p>During my internship I worked as a <strong>Graphic Artist</strong>, operating professional sublimation and DTF print machinery daily while producing design assets at Show Graphics Design Company.</p>
+          <p>I'm fluent in the full design pipeline: from brief to wireframe, wireframe to mockup, mockup to code.</p>
+        </div>
+        <div class="about-meta">
+          <div class="meta-item"><div class="meta-label">Degree</div><div class="meta-val">BS Information Technology</div></div>
+          <div class="meta-item"><div class="meta-label">University</div><div class="meta-val">Eastern Visayas State University - Ormoc Campus</div></div>
+          <div class="meta-item"><div class="meta-label">Location</div><div class="meta-val">Ormoc City, Philippines</div></div>
+          <div class="meta-item"><div class="meta-label">Status</div><div class="meta-val" style="color:var(--gold)">Open to Work ✦</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise">
+  <div class="section-inner">
+    <div class="s-label">03 — Expertise</div>
+    <div class="s-title">What I <em>do best</em></div>
+    <div class="expertise-grid reveal">
+      <div class="exp-card"><div class="exp-num">001</div><span class="exp-icon">✦</span><h3>Front-End Development</h3><p>Translating design mockups into responsive, pixel-faithful code. Clean HTML, CSS, and JavaScript that works beautifully across devices.</p><div class="exp-stack"><span class="exp-tag">HTML5</span><span class="exp-tag">CSS3</span><span class="exp-tag">JavaScript</span><span class="exp-tag">Bootstrap</span><span class="exp-tag">Responsive Design</span></div></div>
+      <div class="exp-card"><div class="exp-num">002</div><span class="exp-icon">✦</span><h3>UI/UX &amp; Web Design</h3><p>Creating intuitive interfaces from wireframes to high-fidelity prototypes. Strong command of layout, hierarchy, and user experience principles.</p><div class="exp-stack"><span class="exp-tag">Figma</span><span class="exp-tag">Photoshop</span><span class="exp-tag">Wireframing</span><span class="exp-tag">Prototyping</span><span class="exp-tag">Design Systems</span></div></div>
+      <div class="exp-card"><div class="exp-num">003</div><span class="exp-icon">✦</span><h3>Graphic Design</h3><p>Visual communication across digital and print media. From brand collateral to social graphics, with a production-ready mindset.</p><div class="exp-stack"><span class="exp-tag">Adobe Photoshop</span><span class="exp-tag">Adobe Illustrator</span><span class="exp-tag">CorelDRAW</span><span class="exp-tag">Typography</span><span class="exp-tag">Print-Ready Files</span></div></div>
+      <div class="exp-card"><div class="exp-num">004</div><span class="exp-icon">✦</span><h3>Print Production</h3><p>End-to-end machine operation for sublimation, DTF, and sticker production. File prep, color management, quality control.</p><div class="exp-stack"><span class="exp-tag">Full Sublimation</span><span class="exp-tag">Spot Sublimation</span><span class="exp-tag">DTF Printing</span><span class="exp-tag">Sticker Print</span><span class="exp-tag">UV Prints</span></div></div>
+      <div class="exp-card"><div class="exp-num">005</div><span class="exp-icon">✦</span><h3>Database Design</h3><p>Designing logical data structures and schemas. Can model ERDs, write SQL queries, and implement basic back-end logic.</p><div class="exp-stack"><span class="exp-tag">MySQL</span><span class="exp-tag">ERD</span><span class="exp-tag">SQL</span><span class="exp-tag">Schema Design</span><span class="exp-tag">PHP</span></div></div>
+      <div class="exp-card"><div class="exp-num">006</div><span class="exp-icon">✦</span><h3>Systems Analysis</h3><p>Documenting requirements, creating system flowcharts, and producing technical documentation. Comfortable with the full SDLC.</p><div class="exp-stack"><span class="exp-tag">Flowcharts</span><span class="exp-tag">Use Cases</span><span class="exp-tag">Documentation</span><span class="exp-tag">SDLC</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-inner">
+    <div class="s-label">04 — Selected Work</div>
+    <div class="s-title"><em>Projects</em> &amp; outputs</div>
+    <div class="work-list reveal">
+      <div class="work-item"><div class="work-num">001</div><div><div class="work-type">Capstone Project</div><div class="work-title">ClassSync: EVSU-OCC Scheduling System</div><div class="work-desc">Replace with your actual capstone - describe the system, your role, and the problem it solved.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">JavaScript</span><span class="work-tag">PHP</span><span class="work-tag">Bootstrap</span><span class="work-tag">MySQL</span><span class="work-tag">Figma</span></div><div class="work-arrow">→</div></div>
+      <div class="work-item"><div class="work-num">002</div><div><div class="work-type">UI/UX Design</div><div class="work-title">Website Mockup / Prototype</div><div class="work-desc">A complete design project from wireframes to high-fidelity prototype.</div></div><div class="work-tags"><span class="work-tag">Figma</span><span class="work-tag">Wireframing</span><span class="work-tag">Prototyping</span></div><div class="work-arrow">→</div></div>
+      <div class="work-item"><div class="work-num">003</div><div><div class="work-type">Web Development</div><div class="work-title">School / Academic System</div><div class="work-desc">A web-based information system built during coursework.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">PHP</span><span class="work-tag">MySQL</span></div><div class="work-arrow">→</div></div>
+      <div class="work-item"><div class="work-num">004</div><div><div class="work-type">Graphic Design · Print</div><div class="work-title">Internship Design Portfolio</div><div class="work-desc">Print-ready artwork and marketing materials produced during OJT.</div></div><div class="work-tags"><span class="work-tag">Photoshop</span><span class="work-tag">CorelDRAW</span><span class="work-tag">Print-Ready</span></div><div class="work-arrow">→</div></div>
+    </div>
+    <!-- Gallery4-style carousel -->
+    <div class="gallery-carousel" id="galleryCarousel">
+
+      <!-- Nav bar -->
+      <div class="gallery-nav">
+        <div class="gallery-nav-label">Design Work &nbsp;·&nbsp; <span id="galleryCounter">1 / 2</span></div>
+        <div class="gallery-nav-btns">
+          <button class="gallery-nav-btn" id="galleryPrev" aria-label="Previous">←</button>
+          <button class="gallery-nav-btn" id="galleryNext" aria-label="Next">→</button>
+        </div>
+      </div>
+
+      <!-- Viewport -->
+      <div class="gallery-viewport">
+        <div class="gallery-track" id="galleryTrack">
+
+          <!-- PAGE 1 — Sublimation & DTF work -->
+          <div class="gallery-page">
+            <!-- Featured tall card -->
+            <div class="gallery-card featured">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554498/D1_flmmdp.png" alt="Sublimation design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D1.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Graphic Design Logo</div>
+                <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
+                <div class="gallery-card-desc">A bold typographic wolf theme illustration for my client using Adobe Photoshop, combining silhouette art with strong hand-lettered styling for a streetwear-inspired graphic output.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <!-- Top right -->
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554473/D2_ar5pvv.png" alt="Sublimation design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D2.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <!-- Top far right -->
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554507/D3_bresbi.png" alt="DTF design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D3.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">A congratulatory tarpaulin layout for a board exam passer, combining portrait photography with typographic celebration elements, prepared and printed via Large Format/Solvent Printer.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <!-- Bottom right -->
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554518/D4_n086gh.png" alt="DTF design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D4.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">A full-sublimation jersey design with dynamic gradient colorways and custom name/number mockup layout using Adobe Photoshop, print-ready and produced using full sublimation printing.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <!-- Bottom far right -->
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554528/D5_y5lz04.png" alt="Sticker design" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D5.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">A promotional tarpaulin design using Adobe Photoshop for a community Fun Run event, incorporating event details, runner silhouette graphics, and vibrant color blocking for outdoor visibility.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 2 — More internship work -->
+          <div class="gallery-page">
+            <!-- Featured tall card (right side this time) -->
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554537/D6_wsrwef.png" alt="Design 6" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D6.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">A themed 1st birthday tarpaulin featuring custom character integration and celebratory typography, delivered as a full-color print-ready layout.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554549/D7_w22802.png" alt="Design 7" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D7.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <div class="gallery-card featured">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554559/D8_bezfoj.png" alt="Design 8" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D8.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">Full-color sublimation jersey featuring a dual-tone panel layout with a team branding and player name/number, produced via adobe photoshop and sublimation printing.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554569/D9_l1wsbx.png" alt="Design 9" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D9.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Sticker Design & Print</div>
+                <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
+                <div class="gallery-card-desc">A product label for "Yor Saging Crunch" by Mesias Original, featuring bold food-brand typography and warm color palette, prepared as a print-ready sticker layout.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+            <div class="gallery-card">
+              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554580/D10_whqg0n.png" alt="Design 10" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D10.png</div></div>'">
+              <div class="gallery-card-overlay">
+                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                <div class="gallery-card-title">Adobe Photoshop</div>
+                <div class="gallery-card-desc">A themed birthday tarpaulin with custom character artwork and celebratory layout elements, a complete internship design output delivered to client standard and quality.</div>
+                <a href="#" class="gallery-card-read">View work</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dot indicators -->
+      <div class="gallery-dots">
+        <div class="gallery-dot active" data-page="0"></div>
+        <div class="gallery-dot" data-page="1"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="s-label">05 — Background</div>
+    <div class="s-title"><em>Experience</em> &amp; education</div>
+    <div class="exp-timeline reveal">
+      <div>
+        <div class="tl-group-label">Work Experience</div>
+        <div class="tl-entry">
+          <div class="tl-year">February 2026 — May 2026 · Internship</div>
+          <div class="tl-role">Graphic Artist & Machine Operator Intern</div>
+          <div class="tl-org">Show Graphics Design & Printa · Ormoc City</div>
+          <ul class="tl-points">
+            <li>Operated full sublimation, spot sublimation, DTF, and sticker printing machines independently.</li>
+            <li>Produced print-ready artwork daily using Adobe Photoshop, Illustrator, and CorelDRAW.</li>
+            <li>Managed color-matching, production QC, and client order turnaround.</li>
+            <li>Collaborated with the team to meet tight deadlines under production pressure.</li>
+          </ul>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-year">Academic · 2022 - 2026</div>
+          <div class="tl-role">Front-End Developer &amp; UI Designer</div>
+          <div class="tl-org">Coursework Projects</div>
+          <ul class="tl-points">
+            <li>Designed and developed multiple web systems as primary designer-developer.</li>
+            <li>Created UI mockups and translated them into functional front-end interfaces.</li>
+            <li>Led design phase in group projects - wireframes, prototypes, final UI.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="tl-group-label">Education &amp; Credentials</div>
+        <div class="tl-entry">
+          <div class="tl-year">2022 - 2026</div>
+          <div class="tl-role">BS Information Technology</div>
+          <div class="tl-org">Eastern Visayas State University - Ormoc Campus · Ormoc City</div>
+          <ul class="tl-points">
+            <li>Specialized in web development, UI/UX design, and database systems.</li>
+            <li>Completed a capstone project developing a web-based scheduling system for the university.</li>
+            <li>ClassSync: A Web-Based Scheduling System for EVSU-OCC (Capstone Project).</li>
+            <li>GWA / GPA: 1.7</li>
+          </ul>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-year">Certifications</div>
+          <div class="tl-role">TESDA NCII</div>
+          <div class="tl-org">Universal Skills Training and Assessment Center (USTAC)</div>
+          <ul class="tl-points">
+            <li>Computer Servicing System NCII.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS MARQUEE -->
+<div id="tools" role="region" aria-label="Tools and technologies">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>Adobe Photoshop</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Figma</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CorelDRAW</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HTML5</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CSS3</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>JavaScript</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MySQL</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Bootstrap</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Full Sublimation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>DTF Printing</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Sticker Production</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PHP</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Adobe Photoshop</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Figma</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CorelDRAW</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HTML5</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CSS3</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>JavaScript</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MySQL</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Bootstrap</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Full Sublimation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>DTF Printing</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Sticker Production</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PHP</span>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="s-label">06 — Contact</div>
+    <div class="contact-grid">
+      <div class="contact-cta reveal">
+        <h2>Let's build something <em>great</em> together.</h2>
+        <p>Open to full-time roles, freelance projects, and creative collaborations. I respond within 24 hours.</p>
+        <div class="contact-links">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=annesophiasilvano407@gmail.com" class="c-link"><span class="c-link-icon">@</span>Gmail</a>
+          <a href="https://www.linkedin.com/in/annesophiasilvano" class="c-link" target="_blank" rel="noopener"><span class="c-link-icon">in</span>LinkedIn</a>
+          <a href="https://github.com/Phiaslvn" class="c-link" target="_blank" rel="noopener"><span class="c-link-icon">gh</span>Github</a>
+          <a href="resume - silvano.pdf" class="c-link"><span class="c-link-icon">↓</span>Download Resume</a>
+        </div>
+      </div>
+      <form class="contact-form reveal" onsubmit="return false;">
+        <div class="f-group"><label for="name">Name</label><input type="text" id="name" placeholder="Anne Sophia Silvano" autocomplete="name"></div>
+        <div class="f-group"><label for="email">Email</label><input type="email" id="email" placeholder="annesophiasilvano407@gmail.com" autocomplete="email"></div>
+        <div class="f-group"><label for="subject">Subject</label><input type="text" id="subject" placeholder="Job opportunity"></div>
+        <div class="f-group"><label for="msg">Message</label><textarea id="msg" placeholder="Tell me about the opportunity"></textarea></div>
+        <button type="submit" class="f-submit">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 Anne Sophia Silvano · BS Information Technology · Ormoc City, PH</span>
+  <span class="footer-sig">Designed &amp; built by Phia.</span>
+  <span class="footer-copy"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:inherit;text-decoration:none">↑ Top</a></span>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.skill-cat,.work-item,.exp-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cursor.style.width='14px';cursor.style.height='14px';
+    ring.style.width='48px';ring.style.height='48px';
+    ring.style.borderColor='rgba(200,169,110,0.6)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cursor.style.width='8px';cursor.style.height='8px';
+    ring.style.width='32px';ring.style.height='32px';
+    ring.style.borderColor='rgba(244,242,238,0.4)';
+  });
+});
+
+// Scroll reveal
+const revealEls=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      e.target.style.transitionDelay=`${i*0.04}s`;
+      e.target.classList.add('visible');
+    }
+  });
+},{threshold:0.08});
+revealEls.forEach(el=>obs.observe(el));
+
+document.querySelectorAll('.exp-card,.skill-cat,.work-item,.tl-entry').forEach((el,i)=>{
+  el.classList.add('reveal');
+  el.style.transitionDelay=`${(i%4)*0.08}s`;
+  obs.observe(el);
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}
+  });
+});
+
+// Gallery4-style carousel
+const galleryTrack = document.getElementById('galleryTrack');
+const galleryPrev = document.getElementById('galleryPrev');
+const galleryNext = document.getElementById('galleryNext');
+const galleryCounter = document.getElementById('galleryCounter');
+const galleryDots = document.querySelectorAll('.gallery-dot');
+const totalPages = document.querySelectorAll('.gallery-page').length;
+let currentPage = 0;
+
+function updateGallery() {
+  galleryTrack.style.transform = `translateX(-${currentPage * 100}%)`;
+  galleryCounter.textContent = `${currentPage + 1} / ${totalPages}`;
+  galleryDots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+  galleryPrev.disabled = currentPage === 0;
+  galleryNext.disabled = currentPage === totalPages - 1;
+}
+
+galleryNext.addEventListener('click', () => { if(currentPage < totalPages-1){ currentPage++; updateGallery(); }});
+galleryPrev.addEventListener('click', () => { if(currentPage > 0){ currentPage--; updateGallery(); }});
+galleryDots.forEach(d => d.addEventListener('click', e => { currentPage = parseInt(e.target.dataset.page); updateGallery(); }));
+
+// Register gallery buttons for cursor hover
+document.querySelectorAll('.gallery-nav-btn,.gallery-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width='14px'; cursor.style.height='14px';
+    ring.style.width='48px'; ring.style.height='48px';
+    ring.style.borderColor='rgba(200,169,110,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width='8px'; cursor.style.height='8px';
+    ring.style.width='32px'; ring.style.height='32px';
+    ring.style.borderColor='rgba(244,242,238,0.4)';
+  });
+});
+
+updateGallery();
+</script>
+</body>
+</html>
