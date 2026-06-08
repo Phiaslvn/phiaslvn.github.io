@@ -773,6 +773,432 @@ footer{
 .hero-desc{animation:fadeInUp 0.9s 0.65s both}
 .hero-actions{animation:fadeInUp 0.9s 0.8s both}
 
+/* ══════════════════════════════════════
+   PHOTOGRAPHY — Expanding Cards
+══════════════════════════════════════ */
+.work-sub-label{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--white-3);
+  display:flex;align-items:center;gap:0.75rem;
+  margin:4rem 0 1.75rem;
+}
+.work-sub-label::before{content:'';width:20px;height:1px;background:var(--white-4)}
+.work-sub-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ══════════════════════════════════════
+   PHOTOGRAPHY — Single-row interactive accordion
+   All 8 panels (4× RAW + 4× EDITED) in one horizontal strip.
+   RAW & EDITED sit adjacent so contrast is instant on hover.
+══════════════════════════════════════ */
+
+/* The single row wrapper */
+.photo-accordion {
+  display: flex;
+  height: 500px;
+  gap: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* Each individual photo panel */
+.pa-panel {
+  position: relative;
+  overflow: hidden;
+  flex: 1;                  /* all panels share space equally when idle */
+  min-width: 48px;          /* never fully disappears */
+  transition: flex 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: none;
+}
+
+/* Hovered panel expands to 4× the rest */
+.pa-panel:hover {
+  flex: 4;
+}
+
+/* Image fills the panel */
+.pa-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.5s, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* RAW panels: desaturated so contrast with EDITED is immediately clear */
+.pa-panel[data-type="raw"] .pa-img {
+  filter: brightness(0.68) saturate(0.1) contrast(0.88);
+}
+.pa-panel[data-type="edited"] .pa-img {
+  filter: brightness(0.80) saturate(1.0);
+}
+
+/* On hover: full reveal */
+.pa-panel[data-type="raw"]:hover .pa-img {
+  filter: brightness(0.85) saturate(0.22) contrast(0.92);
+  transform: scale(1.04);
+}
+.pa-panel[data-type="edited"]:hover .pa-img {
+  filter: brightness(1) saturate(1.08);
+  transform: scale(1.04);
+}
+
+/* Gradient scrim — always present */
+.pa-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8,8,8,0.92) 0%,
+    rgba(8,8,8,0.3) 45%,
+    transparent 70%
+  );
+  z-index: 1;
+}
+
+/* Vertical collapsed label — visible when panel is narrow */
+.pa-v-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244,242,238,0.45);
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.pa-panel:hover .pa-v-label { opacity: 0; }
+
+/* Expanded overlay content — slides up on hover */
+.pa-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.4rem 1.2rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.pa-content {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s 0.12s, transform 0.3s 0.12s;
+}
+.pa-panel:hover .pa-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* RAW / EDITED badge */
+.pa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+}
+.pa-badge-raw {
+  background: rgba(200,169,110,0.14);
+  border: 1px solid rgba(200,169,110,0.35);
+  color: var(--gold);
+}
+.pa-badge-edited {
+  background: rgba(120,200,255,0.1);
+  border: 1px solid rgba(120,200,255,0.28);
+  color: rgba(160,220,255,0.95);
+}
+
+.pa-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 0.3rem;
+}
+.pa-desc {
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 300;
+  color: var(--white-2);
+  line-height: 1.6;
+}
+
+/* Gold corner accents on hovered panel */
+.pa-panel::before, .pa-panel::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: 0;
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 0.3s 0.1s;
+}
+.pa-panel::before { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.pa-panel::after  { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+.pa-panel:hover::before, .pa-panel:hover::after { opacity: 1; }
+
+/* Pair divider — thicker gold line separating each RAW+EDITED pair */
+.pa-pair-div {
+  width: 3px;
+  background: rgba(200,169,110,0.25);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* Thin divider between RAW and EDITED within a pair */
+.pa-inner-div {
+  width: 1px;
+  background: rgba(200,169,110,0.14);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* Info footer below the accordion */
+.pa-info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  gap: 2rem;
+  flex-wrap: wrap;
+  min-height: 3rem;
+}
+.pa-info-entries {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.pa-info-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.pa-info-num {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--white-4);
+}
+.pa-info-cat {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.pa-info-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white-2);
+}
+.pa-info-tags {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.pa-info-tag {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 1px;
+  color: var(--white-3);
+}
+
+/* Hint text */
+.pa-hint {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  color: var(--white-4);
+  margin-top: 0.6rem;
+  text-align: right;
+}
+
+@media (max-width: 960px) {
+  .photo-accordion { height: 280px; }
+  .pa-panel { min-width: 28px; }
+  .pa-desc { display: none; }
+  .pa-info-entries { gap: 1rem; }
+  .pa-info-tags { display: none; }
+}
+
+/* ══════════════════════════════════════
+   VIDEO EDITING — Play-with-description
+══════════════════════════════════════ */
+.video-edit-block{
+  margin-top:5rem;
+  border-top:1px solid var(--border);
+  padding-top:4rem;
+}
+
+.video-edit-grid{
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:5rem;align-items:start;
+}
+
+/* Left: playable video */
+.video-player-wrap{
+  position:relative;
+  border-radius:4px;overflow:hidden;
+  background:var(--black-3);
+  border:1px solid var(--border-hover);
+  aspect-ratio:16/9;
+  cursor:none;
+}
+.video-player-wrap video,
+.video-player-wrap iframe{
+  width:100%;height:100%;
+  display:block;object-fit:cover;
+  border:none;
+}
+
+/* Custom play button overlay */
+.video-play-btn{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:1rem;
+  background:rgba(8,8,8,0.42);
+  backdrop-filter:blur(2px);
+  transition:opacity 0.35s,background 0.35s;
+  z-index:5;
+}
+.video-play-btn.hidden{opacity:0;pointer-events:none}
+
+.video-play-circle{
+  width:72px;height:72px;
+  border:1.5px solid rgba(244,242,238,0.5);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.25s,transform 0.25s,background 0.25s;
+  background:rgba(200,169,110,0.12);
+}
+.video-play-btn:hover .video-play-circle{
+  border-color:var(--gold);
+  background:rgba(200,169,110,0.22);
+  transform:scale(1.08);
+}
+.video-play-circle svg{
+  width:22px;height:22px;fill:var(--white);
+  margin-left:3px; /* optical centering for play triangle */
+}
+.video-play-label{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--white-2);
+}
+
+/* Thumbnail image (shown before video plays) */
+.video-thumb{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+  filter:brightness(0.75);
+  transition:opacity 0.4s;
+  z-index:2;
+}
+.video-thumb.hidden{opacity:0;pointer-events:none}
+
+/* Corner accents on video */
+.video-player-wrap::before,.video-player-wrap::after{
+  content:'';position:absolute;width:18px;height:18px;
+  border-color:var(--gold);border-style:solid;
+  opacity:0.5;z-index:6;pointer-events:none;
+}
+.video-player-wrap::before{top:12px;left:12px;border-width:1px 0 0 1px}
+.video-player-wrap::after{bottom:12px;right:12px;border-width:0 1px 1px 0}
+
+/* Right: description panel */
+.video-desc-panel{
+  display:flex;flex-direction:column;gap:2rem;
+  padding-top:0.5rem;
+}
+.video-desc-eyebrow{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);
+  display:flex;align-items:center;gap:0.75rem;
+}
+.video-desc-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+
+.video-desc-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.6rem,2.8vw,2.5rem);
+  font-weight:300;line-height:1.15;
+  letter-spacing:-0.01em;
+}
+.video-desc-title em{font-style:italic;color:var(--white-2)}
+
+.video-desc-body{
+  font-size:0.865rem;font-weight:300;
+  color:var(--white-2);line-height:1.9;
+}
+.video-desc-body p+p{margin-top:0.85rem}
+
+/* Stats row */
+.video-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  border-radius:2px;overflow:hidden;
+}
+.video-stat{
+  background:var(--black-2);
+  padding:1.1rem 1.25rem;
+}
+.video-stat-val{
+  font-family:var(--font-display);
+  font-size:1.6rem;font-weight:300;font-style:italic;
+  color:var(--gold);line-height:1;margin-bottom:0.3rem;
+}
+.video-stat-label{
+  font-family:var(--font-mono);font-size:0.55rem;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--white-3);
+}
+
+/* Tag strip */
+.video-desc-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.video-desc-tag{
+  font-family:var(--font-mono);font-size:0.55rem;
+  letter-spacing:0.1em;padding:0.22rem 0.65rem;
+  border:1px solid var(--border-hover);color:var(--white-3);
+  border-radius:1px;transition:border-color 0.2s,color 0.2s;
+}
+.video-desc-tag:hover{border-color:var(--gold);color:var(--white)}
+
+/* Multiple video entries list */
+.video-entries{display:flex;flex-direction:column;gap:3rem}
+
 /* ── RESPONSIVE ── */
 @media(max-width:960px){
   nav{padding:1rem 1.5rem}
@@ -791,6 +1217,13 @@ footer{
   .shape-1{width:280px;height:280px;top:-60px;right:-60px}
   .shape-4{display:none}
   .shape-6{width:220px;height:220px}
+  .expand-cards{height:260px;padding:0 1rem 1.5rem}
+  .xcard{flex:0 0 46px}
+  .photo-entry-hd{grid-template-columns:40px 1fr auto;padding:1.2rem 1rem;gap:1rem}
+  .photo-entry-ft{padding:0.75rem 1rem 1.2rem}
+  .photo-ft-note{display:none}
+  .video-edit-grid{grid-template-columns:1fr;gap:2.5rem}
+  .video-desc-panel{padding-top:0}
 }
 </style>
 </head>
@@ -801,7 +1234,7 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">YN<span>.</span></a>
+  <a href="#" class="nav-logo"><span></span></a>
   <ul class="nav-links">
     <li><a href="#skills">Skills</a></li>
     <li><a href="#about">About</a></li>
@@ -809,7 +1242,6 @@ footer{
     <li><a href="#work">Work</a></li>
     <li><a href="#experience">Experience</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Hire Me</a>
 </nav>
 
 <!-- HERO -->
@@ -830,35 +1262,25 @@ footer{
   <div class="shape shape-10"></div>
 
   <div class="hero-inner">
-    <div class="hero-eyebrow">Bachelor of Science Information Technology · Fresh Graduate · Open to Opportunities</div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="hero-eyebrow">Bachelor of Science in Information Technology  · Open to Opportunities</div>
     <h1>
-      <strong>Designer</strong><br>
-      <em>&amp; Developer</em><br>
-      <strong>at Heart.</strong>
+      <strong>Designer.</strong><br>
+      <em>Developer.</em><br>
+      <strong>&amp; Editor.</strong>
     </h1>
-    <div class="hero-subtitle">— Front-End · UI/UX · Graphic &amp; Print</div>
+    <div class="hero-subtitle"> Front-End · UI/UX · Graphic &amp; Print</div>
     <p class="hero-desc">
-      I bridge pixel-perfect design and clean front-end code. From high-fidelity mockups to production-ready interfaces — and real print machinery on the shop floor.
+      I bridge creativity and technology through front-end development, graphic design, photography, and video production. From capturing visuals and crafting engaging edits to building high-fidelity mockups, production-ready interfaces, and working with real print machinery on the shop floor.
     </p>
     <div class="hero-actions">
       <a href="#work" class="btn-solid">View Projects →</a>
       <a href="#contact" class="btn-ghost">Get in Touch</a>
     </div>
   </div>
-
-  <div class="hero-badge" aria-hidden="true">
-    <svg width="110" height="110" viewBox="0 0 110 110">
-      <defs>
-        <path id="circle" d="M55,55 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"/>
-      </defs>
-      <text font-family="'Geist Mono',monospace" font-size="8.5" letter-spacing="3.5" fill="rgba(200,169,110,0.6)">
-        <textPath href="#circle">AVAILABLE · FOR · HIRE · 2025 · IT GRADUATE ·</textPath>
-      </text>
-    </svg>
-    <span class="hero-badge-center">✦</span>
-  </div>
-
-  <div class="scroll-hint" aria-hidden="true">Scroll</div>
 </section>
 
 <!-- SKILLS HIGHLIGHT -->
@@ -868,7 +1290,7 @@ footer{
     <div class="s-title">What I <em>bring to the table</em></div>
     <div class="skills-wrap">
       <div class="skills-intro">
-        <p>A dual-track skill set that's rare in fresh graduates. Equal comfort in visual design tools and front-end code, backed by real production experience in a professional print environment.</p>
+        <p>A blend of technical and creative competencies that bridges design, development, and multimedia production. My expertise spans front-end web development, UI/UX design, graphic design, photography, videography, video editing, voice-over production, typography, and digital content creation. Supported by real-world experience in a professional print environment, I have developed a comprehensive understanding of visual communication across both digital and physical media. This multidisciplinary background allows me to transform ideas into impactful experiences. From designing user interfaces and developing websites to producing promotional videos, marketing materials, and branded visual content.</p>
         <p style="margin-top:1rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold)">Hire me! Rate my skill!</p>
       </div>
       <div class="skills-categories">
@@ -945,7 +1367,7 @@ footer{
         <div class="about-quote">"I don't just build websites. I design experiences that communicate, engage, and leave an impression."</div>
         <div class="about-body">
           <p>A graduate with a <strong>Bachelor of Science in Information Technology</strong>. My strength lies where design meets development.</p>
-          <p>During my internship, I worked as a <strong>Graphic Artist</strong>, operating professional sublimation and DTF print machinery daily while producing design assets at Show Graphics Design Company.</p>
+          <p>During my internship I worked as a <strong>Graphic Artist</strong>, operating professional sublimation and DTF print machinery daily while producing design assets at Show Graphics Design Company.</p>
           <p>I'm fluent in the full design pipeline: from brief to wireframe, wireframe to mockup, mockup to code.</p>
         </div>
         <div class="about-meta">
@@ -981,141 +1403,501 @@ footer{
     <div class="s-label">04 — Selected Work</div>
     <div class="s-title"><em>Projects</em> &amp; outputs</div>
     <div class="work-list reveal">
-      <div class="work-item"><div class="work-num">001</div><div><div class="work-type">Capstone Project</div><div class="work-title">ClassSync: EVSU-OCC Scheduling System</div><div class="work-desc">web-based class scheduling system that helps academic departments efficiently manage timetables, instructor workloads, room assignments, and schedule conflicts through a centralized and user-friendly platform.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">JavaScript</span><span class="work-tag">PHP</span><span class="work-tag">Bootstrap</span><span class="work-tag">MySQL</span><span class="work-tag">Figma</span></div><div class="work-arrow">→</div></div>
-      <div class="work-item"><div class="work-num">002</div><div><div class="work-type">UI/UX Design</div><div class="work-title">Website Mockup / Prototype</div><div class="work-desc">A complete design project from wireframes to high-fidelity prototype.</div></div><div class="work-tags"><span class="work-tag">Figma</span><span class="work-tag">Wireframing</span><span class="work-tag">Prototyping</span></div><div class="work-arrow">→</div></div>
-      <div class="work-item"><div class="work-num">003</div><div><div class="work-type">Web Development</div><div class="work-title">School / Academic System</div><div class="work-desc">A web-based information system built during coursework.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">PHP</span><span class="work-tag">MySQL</span></div><div class="work-arrow">→</div></div>
-      <div class="work-item"><div class="work-num">004</div><div><div class="work-type">Graphic Design · Print</div><div class="work-title">Internship Design Portfolio</div><div class="work-desc">Print-ready artwork and marketing materials produced during OJT.</div></div><div class="work-tags"><span class="work-tag">Photoshop</span><span class="work-tag">CorelDRAW</span><span class="work-tag">Print-Ready</span></div><div class="work-arrow">→</div></div>
-    </div>
-    <!-- Gallery4-style carousel -->
-    <div class="gallery-carousel" id="galleryCarousel">
+      <div class="work-item"><div class="work-num">001</div><div><div class="work-type">Web Development & UI/UX Design</div><div class="work-title">Capstone Project  |  Academic System  |  Website Mockup</div><div class="work-desc">A different web-based system built during coursework like a centralized scheduling platform. A complete design project from wireframes to high-fidelity prototype.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">JavaScript</span><span class="work-tag">PHP</span><span class="work-tag">Bootstrap</span><span class="work-tag">MySQL</span><span class="work-tag">Prototyping</span><span class="work-tag">Wireframing</span></div><div class="work-arrow">→</div></div>
+      <div class="work-item"><div class="work-num">002</div><div><div class="work-type">Graphic Design · Print</div><div class="work-title">Internship Design Portfolio</div><div class="work-desc">Print-ready artwork and marketing materials produced during OJT.</div></div><div class="work-tags"><span class="work-tag">Photoshop</span><span class="work-tag">CorelDRAW</span><span class="work-tag">Print-Ready</span></div><div class="work-arrow">→</div></div>
+        <!-- Gallery4-style carousel -->
+        <div class="gallery-carousel" id="galleryCarousel">
 
-      <!-- Nav bar -->
-      <div class="gallery-nav">
-        <div class="gallery-nav-label">Design Work &nbsp;·&nbsp; <span id="galleryCounter">1 / 2</span></div>
-        <div class="gallery-nav-btns">
-          <button class="gallery-nav-btn" id="galleryPrev" aria-label="Previous">←</button>
-          <button class="gallery-nav-btn" id="galleryNext" aria-label="Next">→</button>
-        </div>
-      </div>
-
-      <!-- Viewport -->
-      <div class="gallery-viewport">
-        <div class="gallery-track" id="galleryTrack">
-
-          <!-- PAGE 1 — Sublimation & DTF work -->
-          <div class="gallery-page">
-            <!-- Featured tall card -->
-            <div class="gallery-card featured">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554498/D1_flmmdp.png" alt="Sublimation design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D1.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Graphic Design Logo</div>
-                <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
-                <div class="gallery-card-desc">A bold typographic wolf theme illustration for my client using Adobe Photoshop, combining silhouette art with strong hand-lettered styling for a streetwear-inspired graphic output.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <!-- Top right -->
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554473/D2_ar5pvv.png" alt="Sublimation design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D2.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <!-- Top far right -->
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554507/D3_bresbi.png" alt="DTF design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D3.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">A congratulatory tarpaulin layout for a board exam passer, combining portrait photography with typographic celebration elements, prepared and printed via Large Format/Solvent Printer.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <!-- Bottom right -->
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554518/D4_n086gh.png" alt="DTF design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D4.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">A full-sublimation jersey design with dynamic gradient colorways and custom name/number mockup layout using Adobe Photoshop, print-ready and produced using full sublimation printing.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <!-- Bottom far right -->
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554528/D5_y5lz04.png" alt="Sticker design" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D5.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">A promotional tarpaulin design using Adobe Photoshop for a community Fun Run event, incorporating event details, runner silhouette graphics, and vibrant color blocking for outdoor visibility.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
+          <!-- Nav bar -->
+          <div class="gallery-nav">
+            <div class="gallery-nav-label">Internship Design Work &nbsp;·&nbsp; <span id="galleryCounter">1 / 2</span></div>
+            <div class="gallery-nav-btns">
+              <button class="gallery-nav-btn" id="galleryPrev" aria-label="Previous">←</button>
+              <button class="gallery-nav-btn" id="galleryNext" aria-label="Next">→</button>
             </div>
           </div>
 
-          <!-- PAGE 2 — More internship work -->
-          <div class="gallery-page">
-            <!-- Featured tall card (right side this time) -->
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554537/D6_wsrwef.png" alt="Design 6" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D6.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">A themed 1st birthday tarpaulin featuring custom character integration and celebratory typography, delivered as a full-color print-ready layout.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554549/D7_w22802.png" alt="Design 7" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D7.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <div class="gallery-card featured">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554559/D8_bezfoj.png" alt="Design 8" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D8.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">Full-color sublimation jersey featuring a dual-tone panel layout with a team branding and player name/number, produced via adobe photoshop and sublimation printing.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554569/D9_l1wsbx.png" alt="Design 9" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D9.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Sticker Design & Print</div>
-                <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
-                <div class="gallery-card-desc">A product label for "Yor Saging Crunch" by Mesias Original, featuring bold food-brand typography and warm color palette, prepared as a print-ready sticker layout.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-            <div class="gallery-card">
-              <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554580/D10_whqg0n.png" alt="Design 10" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D10.png</div></div>'">
-              <div class="gallery-card-overlay">
-                <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
-                <div class="gallery-card-title">Adobe Photoshop</div>
-                <div class="gallery-card-desc">A themed birthday tarpaulin with custom character artwork and celebratory layout elements, a complete internship design output delivered to client standard and quality.</div>
-                <a href="#" class="gallery-card-read">View work</a>
-              </div>
-            </div>
-          </div>
+          <!-- Viewport -->
+          <div class="gallery-viewport">
+            <div class="gallery-track" id="galleryTrack">
 
+              <!-- PAGE 1 — Sublimation & DTF work -->
+              <div class="gallery-page">
+                <!-- Featured tall card -->
+                <div class="gallery-card featured">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554498/D1_flmmdp.png" alt="Sublimation design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D1.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Graphic Design Logo</div>
+                    <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
+                    <div class="gallery-card-desc">A bold typographic wolf theme illustration for my client using Adobe Photoshop, combining silhouette art with strong hand-lettered styling for a streetwear-inspired graphic output.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <!-- Top right -->
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554473/D2_ar5pvv.png" alt="Sublimation design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D2.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <!-- Top far right -->
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554507/D3_bresbi.png" alt="DTF design 1" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D3.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">A congratulatory tarpaulin layout for a board exam passer, combining portrait photography with typographic celebration elements, prepared and printed via Large Format/Solvent Printer.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <!-- Bottom right -->
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554518/D4_n086gh.png" alt="DTF design 2" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D4.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">A full-sublimation jersey design with dynamic gradient colorways and custom name/number mockup layout using Adobe Photoshop, print-ready and produced using full sublimation printing.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <!-- Bottom far right -->
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554528/D5_y5lz04.png" alt="Sticker design" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D5.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">A promotional tarpaulin design using Adobe Photoshop for a community Fun Run event, incorporating event details, runner silhouette graphics, and vibrant color blocking for outdoor visibility.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PAGE 2 — More internship work -->
+              <div class="gallery-page">
+                <!-- Featured tall card (right side this time) -->
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554537/D6_wsrwef.png" alt="Design 6" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🎨</div><div class=\'gallery-placeholder-text\'>D6.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">A themed 1st birthday tarpaulin featuring custom character integration and celebratory typography, delivered as a full-color print-ready layout.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554549/D7_w22802.png" alt="Design 7" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖨️</div><div class=\'gallery-placeholder-text\'>D7.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">Full-color sublimation mockup design produced for client orders created in Adobe Photoshop and CorelDRAW.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <div class="gallery-card featured">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554559/D8_bezfoj.png" alt="Design 8" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>✦</div><div class=\'gallery-placeholder-text\'>D8.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Full Sublimation Tshirt Mockup Design</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">Full-color sublimation jersey featuring a dual-tone panel layout with a team branding and player name/number, produced via adobe photoshop and sublimation printing.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554569/D9_l1wsbx.png" alt="Design 9" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🖼️</div><div class=\'gallery-placeholder-text\'>D9.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Sticker Design & Print</div>
+                    <div class="gallery-card-title">Adobe Photoshop & Illustrator</div>
+                    <div class="gallery-card-desc">A product label for "Yor Saging Crunch" by Mesias Original, featuring bold food-brand typography and warm color palette, prepared as a print-ready sticker layout.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+                <div class="gallery-card">
+                  <img src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780554580/D10_whqg0n.png" alt="Design 10" onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'><div class=\'gallery-placeholder-icon\'>🏷️</div><div class=\'gallery-placeholder-text\'>D10.png</div></div>'">
+                  <div class="gallery-card-overlay">
+                    <div class="gallery-card-tag">Tarpaulin Design, Typography & Print</div>
+                    <div class="gallery-card-title">Adobe Photoshop</div>
+                    <div class="gallery-card-desc">A themed birthday tarpaulin with custom character artwork and celebratory layout elements, a complete internship design output delivered to client standard and quality.</div>
+                    <a href="#" class="gallery-card-read">View work</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div><!-- /gallery-carousel end -->
+
+          <!-- Dot indicators -->
+          <div class="gallery-dots">
+            <div class="gallery-dot active" data-page="0"></div>
+            <div class="gallery-dot" data-page="1"></div>
+          </div>
+        </div><!-- /gallery-carousel wrapper -->
+
+      <div class="work-item"><div class="work-num">003</div><div><div class="work-type">Creative Works</div><div class="work-title">Photgraphy | Photo & Video Editing</div><div class="work-desc">A complete design project from wireframes to high-fidelity prototype.</div></div><div class="work-tags"><span class="work-tag">Adobe Photoshop</span><span class="work-tag">Adobe Lightroom</span><span class="work-tag">Adobe After Effects</span><span class="work-tag">Da Vinci Resolve</span><span class="work-tag">Capcut</span></div><div class="work-arrow">→</div></div>
+    </div>
+    
+    <!-- ══ PHOTOGRAPHY COMPILATION ══ -->
+    <div class="work-sub-label">005 — Photography Compilation · Raw &amp; Edited</div>
+
+    <div class="photo-accordion">
+
+      <!-- ── PAIR 01: Portrait ── -->
+      <div class="pa-panel" data-type="raw" data-pair="1">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780658723/raw1_vncdt7.jpg" alt="RAW — Portrait">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 01</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">Soft Light, Soft Mood</div>
+            <div class="pa-desc">Flat log · No corrections · Muted tones · Original ambient light</div>
+          </div>
         </div>
       </div>
 
-      <!-- Dot indicators -->
-      <div class="gallery-dots">
-        <div class="gallery-dot active" data-page="0"></div>
-        <div class="gallery-dot" data-page="1"></div>
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="1">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780658734/edit1_lqbhqq.jpg" alt="EDITED — Portrait">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 01</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">Soft Light, Soft Mood</div>
+            <div class="pa-desc">Warm skin tone · Dodge &amp; burn · Vignette · Desaturated BG — Adobe Lightroom + Adobe Photoshop</div>
+          </div>
+        </div>
       </div>
 
+      <div class="pa-pair-div"></div>
+
+      <!-- ── PAIR 02: Landscape ── -->
+      <div class="pa-panel" data-type="raw" data-pair="2">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780658747/raw2_ukqn5y.jpg" alt="RAW — Landscape">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 02</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">The Locals</div>
+            <div class="pa-desc">Flat log · Underexposed foreground · Blown sky · Muted haze</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="2">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780658759/edit2_lt2dzb.jpg" alt="EDITED — Landscape">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 02</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">The Locals</div>
+            <div class="pa-desc">Warm orange grade · Sky recovery · Foreground lift · Clarity boost — Adobe Lightroom</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-pair-div"></div>
+
+      <!-- ── PAIR 03: Wild ── -->
+      <div class="pa-panel" data-type="raw" data-pair="3">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780659791/raw3_wg67hs.jpg" alt="RAW — Street">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 03</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">Into the Wild</div>
+            <div class="pa-desc">High ISO grain · Blown lights · Mixed colour temp · Flat range</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="3">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780659797/edit3_gqn6ez.jpg" alt="EDITED — Street">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 03</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">Into the Wild</div>
+            <div class="pa-desc">Noise reduction · Warm Recovery · Cinematic split tone — AdobePhotoshop + Adobe Lightroom</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-pair-div"></div>
+
+      <!-- ── PAIR 04: Event ── -->
+      <div class="pa-panel" data-type="raw" data-pair="4">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780659834/raw5_iun03e.jpg" alt="RAW — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 04</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">Depth</div>
+            <div class="pa-desc">Flat exposure · Mixed venue lighting · No corrections applied</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="4">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780659845/edit5_zqbskt.jpg" alt="EDITED — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 04</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">Depth</div>
+            <div class="pa-desc">Warm grade · Vibrant balanced · Highlight recovery · Mood lift — Adobe Lightroom</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAIR 05: Event ── -->
+      <div class="pa-panel" data-type="raw" data-pair="5">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780735378/raw6_x0xaa6.jpg" alt="RAW — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 05</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">Chinatown</div>
+            <div class="pa-desc">Flat profile · Mixed venue lighting · No corrections applied</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="5">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780735395/edit6_rq2vxw.jpg" alt="EDITED — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 05</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">Chinatown</div>
+            <div class="pa-desc">Vibrant warm grade · exposure balanced · Highlight recovery · Mood lift — Adobe Lightroom</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAIR 06: Event ── -->
+      <div class="pa-panel" data-type="raw" data-pair="6">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780735406/raw7_rfykbd.jpg" alt="RAW — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">RAW · 06</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-raw">◉ RAW</div>
+            <div class="pa-title">Sport Feast</div>
+            <div class="pa-desc">Flat profile · Mixed venue lighting · No corrections applied</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pa-inner-div"></div>
+
+      <div class="pa-panel" data-type="edited" data-pair="6">
+        <img class="pa-img" src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780735416/edit7_ud4ppu.jpg" alt="EDITED — Event">
+        <div class="pa-scrim"></div>
+        <div class="pa-v-label">EDITED · 06</div>
+        <div class="pa-overlay">
+          <div class="pa-content">
+            <div class="pa-badge pa-badge-edited">✦ EDITED</div>
+            <div class="pa-title">Sport Feast</div>
+            <div class="pa-desc">Vibrant warm grade · texturized highlight · Exposure recovery · Mood lift — Adobe Lightroom</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /photo-accordion -->
+
+    <!-- Info bar below accordion -->
+    <div class="pa-info-bar">
+      <div class="pa-info-entries">
+        <div class="pa-info-entry">
+          <span class="pa-info-num">01</span>
+          <span class="pa-info-cat">Event · Competition</span>
+          <span class="pa-info-name">Soft Light, Soft Mood</span>
+        </div>
+        <div class="pa-info-entry">
+          <span class="pa-info-num">02</span>
+          <span class="pa-info-cat">Downtown · Urban Life</span>
+          <span class="pa-info-name">The Locals</span>
+        </div>
+        <div class="pa-info-entry">
+          <span class="pa-info-num">03</span>
+          <span class="pa-info-cat">Wildlife · Adventure</span>
+          <span class="pa-info-name">Into the Wild</span>
+        </div>
+        <div class="pa-info-entry">
+          <span class="pa-info-num">04</span>
+          <span class="pa-info-cat">Activity · Adventure</span>
+          <span class="pa-info-name">Depth</span>
+        </div>
+        <div class="pa-info-entry">
+          <span class="pa-info-num">05</span>
+          <span class="pa-info-cat">Infrastructure · Cultural</span>
+          <span class="pa-info-name">Chinatown</span>
+        </div>
+        <div class="pa-info-entry">
+          <span class="pa-info-num">06 </span>
+          <span class="pa-info-cat">Event · Celebration</span>
+          <span class="pa-info-name">Sport Feast</span>
+        </div>
+      </div>
+      <div class="pa-info-tags">
+        <span class="pa-info-tag">Adobe Lightroom</span>
+        <span class="pa-info-tag">Adobe Photoshop</span>
+        <span class="pa-info-tag">Color Grading</span>
+        <span class="pa-info-tag">Portrait Retouch</span>
+        <span class="pa-info-tag">Noise Reduction</span>
+        <span class="pa-info-tag">Split Toning</span>
+      </div>
     </div>
+    <p class="pa-hint">Hover any panel to expand · RAW and EDITED sit side by side for each shot</p>
+
+    <!-- ══ VIDEO EDITING COMPILATION ══ -->
+    <div class="work-sub-label">006 — Video Editing Compilation</div>
+
+    <div class="video-entries">
+
+      <!-- VIDEO 01 — player left, text right -->
+      <div class="video-edit-grid reveal">
+
+        <div class="video-player-wrap" id="vwrap1">
+          <img class="video-thumb" id="vthumb1"
+            src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780832767/bio_v8hyhv.png"
+            alt="Event Highlight Reel thumbnail">
+          <div class="video-play-btn" id="vbtn1"
+            onclick="playVideo('vwrap1','vthumb1','vbtn1','https://www.youtube-nocookie.com/embed/NyJM-dRJN-M?autoplay=1&rel=0&playsinline=1','https://www.youtube.com/watch?v=NyJM-dRJN-M')">
+            <div class="video-play-circle">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="video-play-label">Play Reel</span>
+          </div>
+        </div>
+
+        <div class="video-desc-panel">
+          <div class="video-desc-eyebrow">Video Editing · 001</div>
+          <h3 class="video-desc-title"><em>Short Film</em><br>Advocacy Campaign | 2024</h3>
+          <div class="video-desc-body">
+            <p>An educational awareness campaign developed as part of the Bachelor of Science in Information Technology (BSIT) program, designed to promote public understanding of biotechnology and its applications in healthcare, agriculture, and scientific innovation.</p>
+            <p>I led the project's creative and production process, serving as the scriptwriter, director, and lead videographer. From concept development to final execution, I was responsible for crafting the narrative, directing scenes, coordinating production activities, and capturing footage that effectively communicated complex biotechnology concepts in an engaging and accessible manner.</p>
+            <p>As the project's creative lead, I oversaw the visual storytelling approach, shot composition, and production workflow to ensure a cohesive and impactful viewing experience. Through strategic planning and content development, I transformed educational material into a compelling multimedia campaign that balanced accuracy, creativity, and audience engagement.</p>
+            <p>This project showcases my strengths in creative direction, scriptwriting, videography, visual storytelling, project leadership, and multimedia production, demonstrating my ability to manage and execute a video project from concept to completion.</p>
+          </div>
+          <div class="video-stats">
+            <div class="video-stat"><div class="video-stat-val">10:00</div><div class="video-stat-label">Final Duration</div></div>
+            <div class="video-stat"><div class="video-stat-val">1080p</div><div class="video-stat-label">Export Quality</div></div>
+            <div class="video-stat"><div class="video-stat-val">15h</div><div class="video-stat-label">Edit Time</div></div>
+            <div class="video-stat"><div class="video-stat-val">58</div><div class="video-stat-label">Clips Used</div></div>
+          </div>
+          <div class="video-desc-tags">
+            <span class="video-desc-tag">CapCut</span>
+            <span class="video-desc-tag">Adobe Photoshop</span>
+            <span class="video-desc-tag">Adobe After Effects</span>
+            <span class="video-desc-tag">DaVinci Resolve</span>
+            <span class="video-desc-tag">B-roll Cuts</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIDEO 02 — text left, player right -->
+      <div class="video-edit-grid reveal" style="border-top:1px solid var(--border);padding-top:4rem">
+
+        <div class="video-desc-panel">
+          <div class="video-desc-eyebrow">Video Edit · 002</div>
+          <h3 class="video-desc-title"><em>Promotional Trailer</em><br>Commissioned Video Production | 2024</h3>
+          <div class="video-desc-body">
+            <p>A commissioned promotional trailer created for the Bachelor of Science in Hospitality Management (BSHM) program, featuring comedy performances from talented comedian in Cebu, Davao, and Tolosa, Leyte. The project was designed to engage audiences through humor and storytelling while promoting the program's values of communication, teamwork, confidence, and cultural diversity.</p>
+            <p>As the project's multimedia creator, I was responsible for the video editing, voice-over narration, typography design, and overall post-production workflow. Using CapCut and DaVinci Resolve, I edited and enhanced the footage through pacing, transitions, audio synchronization, and visual refinement to create a polished and engaging promotional video. I also utilized Adobe Photoshop to develop text overlays and graphic elements that strengthened the trailer's visual identity and marketing appeal.</p>
+            <p>Working on this commissioned project allowed me to apply professional creative and technical skills while meeting client expectations and delivering a promotional video tailored to its intended audience. The project showcases my expertise in video editing, voice-over production, typography, visual storytelling, multimedia design, and client-focused content creation.</p>
+          </div>
+          <div class="video-stats">
+            <div class="video-stat"><div class="video-stat-val">1:46</div><div class="video-stat-label">Final Duration</div></div>
+            <div class="video-stat"><div class="video-stat-val">4k</div><div class="video-stat-label">Export Quality</div></div>
+            <div class="video-stat"><div class="video-stat-val">6h</div><div class="video-stat-label">Edit Time</div></div>
+            <div class="video-stat"><div class="video-stat-val">32</div><div class="video-stat-label">Clips Used</div></div>
+          </div>
+          <div class="video-desc-tags">
+            <span class="video-desc-tag">CapCut</span>
+            <span class="video-desc-tag">Adobe Photoshop</span>
+            <span class="video-desc-tag">DaVinci Resolve</span>
+            <span class="video-desc-tag">Adobe After Effects</span>
+          </div>
+        </div>
+
+        <div class="video-player-wrap" id="vwrap2">
+          <img class="video-thumb" id="vthumb2"
+            src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780832533/comms_loyyhw.png"
+            alt="Short Film Edit thumbnail">
+          <div class="video-play-btn" id="vbtn2"
+            onclick="playVideo('vwrap2','vthumb2','vbtn2','https://www.youtube-nocookie.com/embed/AUHzCx87IGs?autoplay=1&rel=0&playsinline=1','https://www.youtube.com/embed/AUHzCx87IGs?si=WhHJOdYGmlLjGdfZ')">
+            <div class="video-play-circle">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="video-play-label">Play Reel</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIDEO 03 — player left, text right -->
+      <div class="video-edit-grid reveal" style="border-top:1px solid var(--border);padding-top:4rem"></div>
+      <div class="video-edit-grid reveal">
+
+        <div class="video-player-wrap" id="vwrap3">
+          <img class="video-thumb" id="vthumb3"
+            src="https://res.cloudinary.com/dnhmavm8n/image/upload/q_auto/f_auto/v1780831050/ads_nsxvu7.png"
+            alt="Event Highlight Reel thumbnail">
+          <div class="video-play-btn" id="vbtn3"
+            onclick="playVideo('vwrap3','vthumb3','vbtn3','https://www.youtube-nocookie.com/embed/NCvFFFRwYfk?autoplay=1&rel=0&playsinline=1','https://www.youtube.com/embed/NCvFFFRwYfk?si=jAQhjMTbyByV9Snj')">
+            <div class="video-play-circle">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="video-play-label">Play Reel</span>
+          </div>
+        </div>
+
+        <div class="video-desc-panel">
+          <div class="video-desc-eyebrow">Video Editing · 003</div>
+          <h3 class="video-desc-title"><em>Product Advertisement</em><br>Entrep Project | 2022</h3>
+          <div class="video-desc-body">
+            <p>A promotional advertisement developed for an Entrepreneurship course, featuring a fictional energy drink brand, Python Energy Drink. The project focused on product branding, marketing communication, and creative advertising through multimedia production.</p>
+            <p>I led the content creation and post-production process, including scriptwriting, voice-over narration, and video editing. I crafted the advertisement's message, delivered the narration, and edited the final video by integrating footage, audio, typography, transitions, and visual effects to create an engaging promotional commercial.</p>
+            <p>This project showcases my ability to combine storytelling, branding, multimedia editing, and content creation to transform a business concept into a compelling marketing campaign. It also highlights my skills in video production, voice-over work, typography, visual communication, and digital media design.</p>
+          </div>
+          <div class="video-stats">
+            <div class="video-stat"><div class="video-stat-val">01:02</div><div class="video-stat-label">Final Duration</div></div>
+            <div class="video-stat"><div class="video-stat-val">1080p</div><div class="video-stat-label">Export Quality</div></div>
+            <div class="video-stat"><div class="video-stat-val">4h</div><div class="video-stat-label">Edit Time</div></div>
+            <div class="video-stat"><div class="video-stat-val">29</div><div class="video-stat-label">Clips Used</div></div>
+          </div>
+          <div class="video-desc-tags">
+            <span class="video-desc-tag">CapCut</span>
+            <span class="video-desc-tag">DaVinci Resolve</span>
+            <span class="video-desc-tag">B-roll Cuts</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /video-entries -->
+
   </div>
 </section>
 
@@ -1152,8 +1934,8 @@ footer{
       <div>
         <div class="tl-group-label">Education &amp; Credentials</div>
         <div class="tl-entry">
-          <div class="tl-year">2022 - 2026</div>
-          <div class="tl-role">Bachelor of Science Information Technology</div>
+          <div class="tl-year">August 2022 - May 2026</div>
+          <div class="tl-role">Bachelor of Science in Information Technology</div>
           <div class="tl-org">Eastern Visayas State University - Ormoc Campus · Ormoc City</div>
           <ul class="tl-points">
             <li>Specialized in web development, UI/UX design, and database systems.</li>
@@ -1163,7 +1945,7 @@ footer{
           </ul>
         </div>
         <div class="tl-entry">
-          <div class="tl-year">Certifications</div>
+          <div class="tl-year">December 2024 - January 2025</div>
           <div class="tl-role">TESDA NCII</div>
           <div class="tl-org">Universal Skills Training and Assessment Center (USTAC)</div>
           <ul class="tl-points">
@@ -1216,8 +1998,8 @@ footer{
         <div class="contact-links">
           <a href="https://mail.google.com/mail/?view=cm&fs=1&to=annesophiasilvano407@gmail.com" class="c-link"><span class="c-link-icon">@</span>Gmail</a>
           <a href="https://www.linkedin.com/in/annesophiasilvano" class="c-link" target="_blank" rel="noopener"><span class="c-link-icon">in</span>LinkedIn</a>
-          <a href="https://github.com/Phiaslvn" class="c-link" target="_blank" rel="noopener"><span class="c-link-icon">gh</span>Github</a>
-          <a href="resume - silvano.pdf" class="c-link"><span class="c-link-icon">↓</span>Download Resume</a>
+          <!-- <a href="https://github.com/Phiaslvn" class="c-link" target="_blank" rel="noopener"><span class="c-link-icon">gh</span>Github</a> -->
+          <a href="Resume - Silvano.pdf" class="c-link"><span class="c-link-icon">↓</span>Download Resume</a>
         </div>
       </div>
       <form class="contact-form reveal" onsubmit="return false;">
@@ -1233,7 +2015,7 @@ footer{
 
 <!-- FOOTER -->
 <footer>
-  <span class="footer-copy">© 2025 Anne Sophia Silvano · Bachelor of Science Information Technology · Ormoc City, PH</span>
+  <span class="footer-copy">© 2025 Anne Sophia Silvano · Bachelor of Science in Information Technology · Ormoc City, PH</span>
   <span class="footer-sig">Designed &amp; built by Phia.</span>
   <span class="footer-copy"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:inherit;text-decoration:none">↑ Top</a></span>
 </footer>
@@ -1326,6 +2108,72 @@ document.querySelectorAll('.gallery-nav-btn,.gallery-card').forEach(el => {
 });
 
 updateGallery();
+
+// ── Photography accordion — pure CSS hover, just register cursor ──
+document.querySelectorAll('.pa-panel').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width='14px'; cursor.style.height='14px';
+    ring.style.width='52px'; ring.style.height='52px';
+    ring.style.borderColor='rgba(200,169,110,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width='8px'; cursor.style.height='8px';
+    ring.style.width='32px'; ring.style.height='32px';
+    ring.style.borderColor='rgba(244,242,238,0.4)';
+  });
+});
+
+// ── Video player ──
+function playVideo(wrapId, thumbId, btnId, embedUrl, watchUrl) {
+  const wrap = document.getElementById(wrapId);
+  const thumb = document.getElementById(thumbId);
+  const btn = document.getElementById(btnId);
+  // Normalize embed URL for best compatibility
+  if (embedUrl.includes('youtube.com/embed/')) {
+    embedUrl = embedUrl.replace('youtube.com/embed/', 'www.youtube-nocookie.com/embed/');
+  }
+  if (!embedUrl.includes('autoplay=')) {
+    embedUrl += (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+  }
+  if (!embedUrl.includes('rel=')) {
+    embedUrl += '&rel=0';
+  }
+  if (!embedUrl.includes('playsinline=')) {
+    embedUrl += '&playsinline=1';
+  }
+  // Hide thumb and play button
+  thumb.classList.add('hidden');
+  btn.classList.add('hidden');
+  // Inject iframe
+  const iframe = document.createElement('iframe');
+  iframe.src = embedUrl;
+  iframe.setAttribute('title', 'YouTube video player');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
+  iframe.addEventListener('error', () => {
+    if (watchUrl) {
+      window.open(watchUrl, '_blank');
+    }
+  });
+  wrap.appendChild(iframe);
+}
+
+// Register video player elements for cursor
+document.querySelectorAll('.video-player-wrap, .video-play-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width='14px'; cursor.style.height='14px';
+    ring.style.width='60px'; ring.style.height='60px';
+    ring.style.borderColor='rgba(200,169,110,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width='8px'; cursor.style.height='8px';
+    ring.style.width='32px'; ring.style.height='32px';
+    ring.style.borderColor='rgba(244,242,238,0.4)';
+  });
+});
 </script>
 </body>
 </html>
