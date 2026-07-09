@@ -112,7 +112,7 @@ nav{
   min-height:100vh;
   padding:0 3.5rem;
   display:flex;flex-direction:column;
-  justify-content:center;
+  justify-content:center;align-items:center;
   position:relative;overflow:hidden;
 }
 
@@ -256,10 +256,10 @@ nav{
   100%{transform:rotate(360deg) translate(0,0)}
 }
 
-.hero-inner{position:relative;z-index:2;max-width:900px}
+.hero-inner{position:relative;z-index:2;max-width:900px;text-align:center}
 
 .hero-eyebrow{
-  display:flex;align-items:center;gap:1rem;
+  display:flex;align-items:center;justify-content:center;gap:1rem;
   font-family:var(--font-mono);font-size:0.65rem;
   font-weight:400;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--gold);margin-bottom:2rem;
@@ -287,13 +287,14 @@ nav{
 }
 
 .hero-desc{
-  max-width:520px;
+  max-width:720px;
+  margin-left:auto;margin-right:auto;
   font-size:0.9rem;font-weight:300;
   color:var(--white-2);line-height:1.85;
   margin-bottom:3rem;
 }
 
-.hero-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.hero-actions{display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap}
 
 .btn-ghost{
   display:inline-flex;align-items:center;gap:0.6rem;
@@ -374,47 +375,63 @@ section{position:relative;z-index:2}
 /* ── SKILLS ── */
 #skills{background:var(--black-2);border-top:1px solid var(--border)}
 
-.skills-wrap{
-  display:grid;grid-template-columns:1fr 2fr;
-  gap:5rem;align-items:start;
-}
-.skills-intro p{
-  font-size:0.875rem;font-weight:300;
-  color:var(--white-2);line-height:1.9;
-  margin-bottom:1.5rem;
-}
-.skills-categories{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.skills-categories{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;align-items:stretch}
 .skill-cat{
-  background:var(--black-2);padding:1.75rem 2rem;
-  display:grid;grid-template-columns:auto 1fr auto;
-  gap:1.5rem;align-items:center;
-  border:1px solid transparent;
-  transition:border-color 0.2s,background 0.2s;cursor:default;
+  background:var(--black-3);padding:1.75rem 1.75rem 1.5rem;
+  display:flex;flex-direction:column;gap:1.35rem;height:100%;
+  border:1px solid var(--border);border-radius:16px;
+  transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;cursor:default;
 }
-.skill-cat:hover{background:var(--black-3);border-color:var(--border-hover)}
-.skill-cat:hover .skill-cat-bar-fill{background:var(--gold)}
+.skill-cat-desc{font-size:0.8rem;font-weight:300;color:var(--white-2);line-height:1.75}
+.skill-cat-tags{margin-top:auto}
+.skill-cat:hover{border-color:var(--border-hover);transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(0,0,0,0.6)}
+.skill-cat-head{display:flex;align-items:center;justify-content:space-between;gap:0.75rem}
+.skill-cat-title{display:flex;align-items:center;gap:0.6rem}
 .skill-cat-icon{
-  width:38px;height:38px;border:1px solid var(--border-hover);
-  border-radius:6px;display:flex;align-items:center;
-  justify-content:center;font-size:1rem;flex-shrink:0;
+  width:34px;height:34px;border:1px solid var(--border-hover);
+  border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:0.95rem;flex-shrink:0;
 }
-.skill-cat-info h4{font-size:0.85rem;font-weight:500;letter-spacing:0.02em;margin-bottom:0.3rem}
-.skill-cat-tags{display:flex;flex-wrap:wrap;gap:0.3rem}
+.skill-cat-info h4{font-size:0.82rem;font-weight:500;letter-spacing:0.02em}
+.skill-cat-badge{
+  font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.12em;
+  text-transform:uppercase;padding:0.32rem 0.7rem;border-radius:999px;
+  white-space:nowrap;border:1px solid;
+}
+.badge-high{color:#f2d9a4;background:rgba(200,169,110,0.14);border-color:rgba(200,169,110,0.45)}
+.badge-mid{color:#e3caa0;background:rgba(200,169,110,0.08);border-color:rgba(200,169,110,0.28)}
+.badge-low{color:var(--white-2);background:rgba(244,242,238,0.05);border-color:var(--border-hover)}
+
+.skill-cat-gauge{position:relative;width:168px;height:92px;margin:0 auto}
+.gauge-svg{width:100%;height:100%;overflow:visible}
+.gauge-track{fill:none;stroke:var(--white-5);stroke-width:13;stroke-linecap:round}
+.gauge-fill{fill:none;stroke-width:13;stroke-linecap:round;transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1)}
+.gauge-fill.tier-high{stroke:var(--gold)}
+.gauge-fill.tier-mid{stroke:#d3b47c}
+.gauge-fill.tier-low{stroke:rgba(244,242,238,0.4)}
+.gauge-center{position:absolute;left:0;right:0;bottom:2px;text-align:center}
+.gauge-score{font-family:var(--font-display);font-size:2rem;color:var(--white);line-height:1}
+.gauge-outof{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--white-3);margin-top:0.25rem}
+
+.skill-cat-tags{display:flex;flex-wrap:wrap;gap:0.3rem;justify-content:center}
 .skill-cat-tag{
-  font-family:var(--font-mono);font-size:0.58rem;
+  font-family:var(--font-mono);font-size:0.56rem;
   letter-spacing:0.08em;padding:0.15rem 0.55rem;
   border:1px solid var(--border-hover);border-radius:2px;color:var(--white-3);
 }
-.skill-cat-level{font-family:var(--font-mono);font-size:0.6rem;color:var(--white-3);text-align:right;white-space:nowrap}
-.skill-cat-bar{width:60px;height:2px;background:var(--white-4);border-radius:1px;margin-top:0.3rem;margin-left:auto}
-.skill-cat-bar-fill{height:100%;border-radius:1px;background:var(--white-2);transition:background 0.2s}
+@media(max-width:1024px){
+  .skills-categories{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .skills-categories{grid-template-columns:1fr}
+}
 
 /* ── ABOUT ── */
 #about{background:var(--black);border-top:1px solid var(--border)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
-.about-photo{position:relative}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.about-photo{position:relative;max-width:440px}
 .photo-frame{
-  aspect-ratio:3/4;background:var(--black-3);
+  aspect-ratio:4/5;background:var(--black-3);
   border:1px solid var(--border-hover);border-radius:2px;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;position:relative;
@@ -427,6 +444,21 @@ section{position:relative;z-index:2}
 .corner-br{bottom:12px;right:12px;border-width:0 1px 1px 0}
 .photo-monogram{font-family:var(--font-display);font-size:8rem;font-weight:300;font-style:italic;color:var(--white-4);line-height:1;user-select:none}
 .about-info{display:flex;flex-direction:column;gap:2rem}
+.about-name{
+  font-family:var(--font-body);font-weight:600;
+  font-size:clamp(2rem,3.4vw,2.8rem);line-height:1.08;
+  letter-spacing:-0.01em;color:var(--white);margin-bottom:-0.75rem;
+}
+.about-tags{display:flex;flex-wrap:wrap;gap:0.6rem}
+.about-tag{
+  font-family:var(--font-mono);font-size:0.68rem;font-weight:400;
+  letter-spacing:0.02em;padding:0.55rem 1.1rem;border-radius:999px;
+  border:1px solid;white-space:nowrap;
+}
+.tag-c1{color:#8fd6c4;background:rgba(143,214,196,0.08);border-color:rgba(143,214,196,0.35)}
+.tag-c2{color:var(--gold);background:var(--gold-soft);border-color:rgba(200,169,110,0.4)}
+.tag-c3{color:#e0a165;background:rgba(224,161,101,0.08);border-color:rgba(224,161,101,0.35)}
+.tag-c4{color:#9ecb7f;background:rgba(158,203,127,0.08);border-color:rgba(158,203,127,0.35)}
 .about-quote{
   font-family:var(--font-display);font-size:clamp(1.3rem,2vw,1.7rem);
   font-weight:300;font-style:italic;line-height:1.5;color:var(--white-2);
@@ -438,33 +470,6 @@ section{position:relative;z-index:2}
 .meta-item{background:var(--black-2);padding:1.25rem 1.5rem}
 .meta-label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--white-3);margin-bottom:0.35rem}
 .meta-val{font-size:0.85rem;font-weight:400;color:var(--white)}
-
-/* ── EXPERTISE ── */
-#expertise{background:var(--black-2);border-top:1px solid var(--border)}
-.expertise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
-.exp-card{
-  background:var(--black-2);padding:2.25rem 1.75rem;
-  position:relative;overflow:hidden;transition:background 0.25s;
-}
-.exp-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  transform:scaleX(0);transition:transform 0.4s;
-}
-.exp-card:hover::before{transform:scaleX(1)}
-.exp-card:hover{background:var(--black-3)}
-.exp-num{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.2em;color:var(--white-4);margin-bottom:1.5rem}
-.exp-icon{font-size:1.6rem;margin-bottom:1.25rem;display:block}
-.exp-card h3{font-size:0.9rem;font-weight:500;letter-spacing:0.02em;margin-bottom:0.75rem}
-.exp-card p{font-size:0.8rem;font-weight:300;color:var(--white-3);line-height:1.8;margin-bottom:1.25rem}
-.exp-stack{display:flex;flex-wrap:wrap;gap:0.35rem}
-.exp-tag{
-  font-family:var(--font-mono);font-size:0.56rem;
-  letter-spacing:0.08em;padding:0.2rem 0.6rem;
-  border:1px solid var(--border-hover);color:var(--white-3);border-radius:1px;
-  transition:border-color 0.2s,color 0.2s;
-}
-.exp-card:hover .exp-tag{border-color:var(--gold);color:var(--white-2)}
 
 /* ── WORK ── */
 #work{background:var(--black);border-top:1px solid var(--border)}
@@ -781,10 +786,10 @@ section{position:relative;z-index:2}
 
 /* ── CONTACT ── */
 #contact{background:var(--black);border-top:1px solid var(--border)}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.contact-grid{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;max-width:640px;margin:0 auto}
 .contact-cta h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);font-weight:300;line-height:1.15;margin-bottom:1.5rem;letter-spacing:-0.01em}
 .contact-cta h2 em{font-style:italic;color:var(--gold)}
-.contact-cta p{font-size:0.875rem;font-weight:300;color:var(--white-2);line-height:1.9;margin-bottom:2.5rem;max-width:380px}
+.contact-cta p{font-size:0.875rem;font-weight:300;color:var(--white-2);line-height:1.9;margin-bottom:2.5rem;max-width:480px;margin-left:auto;margin-right:auto}
 .contact-links{display:flex;flex-direction:column;gap:0}
 .c-link{
   display:flex;align-items:center;gap:1.25rem;padding:1.1rem 0;
@@ -805,23 +810,7 @@ section{position:relative;z-index:2}
   font-size:0.75rem;flex-shrink:0;transition:border-color 0.2s,color 0.2s;
   font-family:var(--font-mono);
 }
-.contact-form{display:flex;flex-direction:column;gap:0}
-.f-group{display:flex;flex-direction:column;border-bottom:1px solid var(--border);padding-bottom:0}
-.f-group:focus-within{border-bottom-color:var(--gold)}
-.f-group label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-4);padding-top:1.25rem;transition:color 0.2s}
-.f-group:focus-within label{color:var(--gold)}
-.f-group input,.f-group textarea{font-family:var(--font-body);font-size:0.875rem;font-weight:300;color:var(--white);background:transparent;border:none;outline:none;padding:0.5rem 0 1.25rem;resize:none;caret-color:var(--gold)}
-.f-group input::placeholder,.f-group textarea::placeholder{color:var(--white-4)}
-.f-group textarea{min-height:90px}
-.f-submit{
-  margin-top:2rem;align-self:flex-start;
-  font-family:var(--font-mono);font-size:0.62rem;
-  font-weight:400;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--black);background:var(--white);
-  border:none;padding:0.85rem 2rem;border-radius:2px;
-  cursor:none;transition:background 0.2s;
-}
-.f-submit:hover{background:var(--gold)}
+
 
 /* ── FOOTER ── */
 footer{
@@ -1279,8 +1268,7 @@ footer{
   .section-inner{padding:5rem 1.5rem}
   .hero{padding:0 1.5rem}
   .hero h1{font-size:3rem}
-  .skills-wrap,.about-grid,.contact-grid,.exp-timeline{grid-template-columns:1fr;gap:2.5rem}
-  .expertise-grid{grid-template-columns:1fr}
+  .about-grid,.contact-grid,.exp-timeline{grid-template-columns:1fr;gap:2.5rem}
   .work-item{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
   .work-tags{grid-column:2;justify-content:flex-start}
   .work-arrow{display:none}
@@ -1311,7 +1299,6 @@ footer{
   <ul class="nav-links">
     <li><a href="#skills">Skills</a></li>
     <li><a href="#about">About</a></li>
-    <li><a href="#expertise">Expertise</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#experience">Experience</a></li>
   </ul>
@@ -1341,13 +1328,11 @@ footer{
     <br>
     <div class="hero-eyebrow">Bachelor of Science in Information Technology  · Open to Opportunities</div>
     <h1>
-      <strong>Designer.</strong><br>
-      <em>Developer.</em><br>
-      <strong>&amp; Editor.</strong>
+      <strong>Designer.</strong> <em>Developer.</em><br><strong>&amp; Editor.</strong>
     </h1>
     <div class="hero-subtitle"> Front-End · UI/UX · Graphic &amp; Print</div>
     <p class="hero-desc">
-      I bridge creativity and technology through front-end development, graphic design, photography, and video production. From capturing visuals and crafting engaging edits to building high-fidelity mockups, production-ready interfaces, and working with real print machinery on the shop floor.
+      My expertise spans front-end web development, UI/UX design, graphic design, photography, videography, video editing, voice-over production, typography, and digital content creation. Supported by real-world experience in a professional print environment, I have developed a comprehensive understanding of visual communication across both digital and physical media. From designing user interfaces and developing websites to producing promotional videos, marketing materials, and branded visual content.
     </p>
     <div class="hero-actions">
       <a href="#work" class="btn-solid">View Projects →</a>
@@ -1361,64 +1346,128 @@ footer{
   <div class="section-inner">
     <div class="s-label">01 — Core Competencies</div>
     <div class="s-title">What I <em>bring to the table</em></div>
-    <div class="skills-wrap">
-      <div class="skills-intro">
-        <p>A blend of technical and creative competencies that bridges design, development, and multimedia production. My expertise spans front-end web development, UI/UX design, graphic design, photography, videography, video editing, voice-over production, typography, and digital content creation. Supported by real-world experience in a professional print environment, I have developed a comprehensive understanding of visual communication across both digital and physical media. This multidisciplinary background allows me to transform ideas into impactful experiences. From designing user interfaces and developing websites to producing promotional videos, marketing materials, and branded visual content.</p>
-        <p style="margin-top:1rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold)">Hire me! Rate my skill!</p>
+    <div class="skills-categories">
+      <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">🎨</div>
+              <div class="skill-cat-info"><h4>UI/UX Design &amp; Mockups</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-high">Strong</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-high" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="224.3"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="85">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">Creating intuitive interfaces from wireframes to high-fidelity prototypes. Strong command of layout, hierarchy, and user experience principles.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">Figma</span><span class="skill-cat-tag">Wireframing</span><span class="skill-cat-tag">Prototyping</span><span class="skill-cat-tag">User Flow</span><span class="skill-cat-tag">Color Theory</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">💻</div>
+              <div class="skill-cat-info"><h4>Front-End Development</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-mid">Proficient</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-mid" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="197.9"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="75">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">Translating design mockups into responsive, pixel-faithful code. Clean HTML, CSS, and JavaScript that works beautifully across devices.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">HTML5</span><span class="skill-cat-tag">CSS3</span><span class="skill-cat-tag">JavaScript</span><span class="skill-cat-tag">Responsive</span><span class="skill-cat-tag">Bootstrap</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">🖼️</div>
+              <div class="skill-cat-info"><h4>Graphic Design</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-high">Advanced</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-high" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="232.2"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="88">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">Visual communication across digital and print media. From brand collateral to social graphics, with a production-ready mindset.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">Photoshop</span><span class="skill-cat-tag">CorelDRAW</span><span class="skill-cat-tag">Typography</span><span class="skill-cat-tag">Layout</span><span class="skill-cat-tag">Branding</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">🎬</div>
+              <div class="skill-cat-info"><h4>Video &amp; Photo Editing</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-high">Advanced</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-high" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="237.5"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="90">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">Editing raw footage and photos into polished, publish-ready content — from color grading and pacing to retouching and audio sync.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">Premiere Pro</span><span class="skill-cat-tag">CapCut</span><span class="skill-cat-tag">After Effects</span><span class="skill-cat-tag">Color Grading</span><span class="skill-cat-tag">Photo Retouching</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">🖨️</div>
+              <div class="skill-cat-info"><h4>Print Production</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-high">Hands-on</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-high" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="216.4"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="82">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">End-to-end machine operation for sublimation, DTF, and sticker production. File prep, color management, quality control.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">Full Sublimation</span><span class="skill-cat-tag">Spot Sublimation</span><span class="skill-cat-tag">DTF</span><span class="skill-cat-tag">Sticker Print</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <div class="skill-cat-head">
+            <div class="skill-cat-title">
+              <div class="skill-cat-icon">🗄️</div>
+              <div class="skill-cat-info"><h4>Database &amp; Back-End</h4></div>
+            </div>
+            <span class="skill-cat-badge badge-low">Functional</span>
+          </div>
+          <div class="skill-cat-gauge">
+            <svg viewBox="0 0 200 106" class="gauge-svg">
+              <path class="gauge-track" d="M16 100 A84 84 0 0 1 184 100"/>
+              <path class="gauge-fill tier-low" d="M16 100 A84 84 0 0 1 184 100" stroke-dasharray="0 263.9" data-fill="118.8"/>
+            </svg>
+            <div class="gauge-center"><div class="gauge-score" data-score="45">0</div><div class="gauge-outof">Out of 100</div></div>
+          </div>
+          <p class="skill-cat-desc">Designing logical data structures and schemas. Can model ERDs, write SQL queries, and implement basic back-end logic.</p>
+          <div class="skill-cat-tags">
+            <span class="skill-cat-tag">MySQL</span><span class="skill-cat-tag">DB Design</span><span class="skill-cat-tag">SQL</span><span class="skill-cat-tag">PHP basic</span><span class="skill-cat-tag">Schema Design</span>
+          </div>
+        </div>
       </div>
-      <div class="skills-categories">
-        <div class="skill-cat">
-          <div class="skill-cat-icon">🎨</div>
-          <div class="skill-cat-info">
-            <h4>UI/UX Design &amp; Mockups</h4>
-            <div class="skill-cat-tags">
-              <span class="skill-cat-tag">Figma</span><span class="skill-cat-tag">Wireframing</span><span class="skill-cat-tag">Prototyping</span><span class="skill-cat-tag">User Flow</span><span class="skill-cat-tag">Color Theory</span>
-            </div>
-          </div>
-          <div class="skill-cat-level"><div>Strong</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:85%"></div></div></div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-icon">💻</div>
-          <div class="skill-cat-info">
-            <h4>Front-End Development</h4>
-            <div class="skill-cat-tags">
-              <span class="skill-cat-tag">HTML5</span><span class="skill-cat-tag">CSS3</span><span class="skill-cat-tag">JavaScript</span><span class="skill-cat-tag">Responsive</span><span class="skill-cat-tag">Bootstrap</span>
-            </div>
-          </div>
-          <div class="skill-cat-level"><div>Proficient</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:75%"></div></div></div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-icon">🖼️</div>
-          <div class="skill-cat-info">
-            <h4>Graphic Design</h4>
-            <div class="skill-cat-tags">
-              <span class="skill-cat-tag">Photoshop</span><span class="skill-cat-tag">CorelDRAW</span><span class="skill-cat-tag">Typography</span><span class="skill-cat-tag">Layout</span><span class="skill-cat-tag">Branding</span>
-            </div>
-          </div>
-          <div class="skill-cat-level"><div>Advanced</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:88%"></div></div></div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-icon">🖨️</div>
-          <div class="skill-cat-info">
-            <h4>Print Production</h4>
-            <div class="skill-cat-tags">
-              <span class="skill-cat-tag">Full Sublimation</span><span class="skill-cat-tag">Spot Sublimation</span><span class="skill-cat-tag">DTF</span><span class="skill-cat-tag">Sticker Print</span>
-            </div>
-          </div>
-          <div class="skill-cat-level"><div>Hands-on</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:82%"></div></div></div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-icon">🗄️</div>
-          <div class="skill-cat-info">
-            <h4>Database &amp; Back-End</h4>
-            <div class="skill-cat-tags">
-              <span class="skill-cat-tag">MySQL</span><span class="skill-cat-tag">DB Design</span><span class="skill-cat-tag">SQL</span><span class="skill-cat-tag">PHP basic</span><span class="skill-cat-tag">Schema Design</span>
-            </div>
-          </div>
-          <div class="skill-cat-level"><div>Functional</div><div class="skill-cat-bar"><div class="skill-cat-bar-fill" style="width:45%"></div></div></div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1437,6 +1486,13 @@ footer{
         </div>
       </div>
       <div class="about-info">
+        <div class="about-name">Anne Sophia Silvano</div>
+        <div class="about-tags">
+          <span class="about-tag tag-c1">Front-End Developer</span>
+          <span class="about-tag tag-c2">UI/UX Designer</span>
+          <span class="about-tag tag-c3">Graphic Designer</span>
+          <span class="about-tag tag-c4">Video &amp; Photo Editor</span>
+        </div>
         <div class="about-quote">"I don't just build websites. I design experiences that communicate, engage, and leave an impression."</div>
         <div class="about-body">
           <p>A graduate with a <strong>Bachelor of Science in Information Technology</strong>. My strength lies where design meets development.</p>
@@ -1454,26 +1510,10 @@ footer{
   </div>
 </section>
 
-<!-- EXPERTISE -->
-<section id="expertise">
-  <div class="section-inner">
-    <div class="s-label">03 — Expertise</div>
-    <div class="s-title">What I <em>do best</em></div>
-    <div class="expertise-grid reveal">
-      <div class="exp-card"><div class="exp-num">001</div><span class="exp-icon">✦</span><h3>Front-End Development</h3><p>Translating design mockups into responsive, pixel-faithful code. Clean HTML, CSS, and JavaScript that works beautifully across devices.</p><div class="exp-stack"><span class="exp-tag">HTML5</span><span class="exp-tag">CSS3</span><span class="exp-tag">JavaScript</span><span class="exp-tag">Bootstrap</span><span class="exp-tag">Responsive Design</span></div></div>
-      <div class="exp-card"><div class="exp-num">002</div><span class="exp-icon">✦</span><h3>UI/UX &amp; Web Design</h3><p>Creating intuitive interfaces from wireframes to high-fidelity prototypes. Strong command of layout, hierarchy, and user experience principles.</p><div class="exp-stack"><span class="exp-tag">Figma</span><span class="exp-tag">Photoshop</span><span class="exp-tag">Wireframing</span><span class="exp-tag">Prototyping</span><span class="exp-tag">Design Systems</span></div></div>
-      <div class="exp-card"><div class="exp-num">003</div><span class="exp-icon">✦</span><h3>Graphic Design</h3><p>Visual communication across digital and print media. From brand collateral to social graphics, with a production-ready mindset.</p><div class="exp-stack"><span class="exp-tag">Adobe Photoshop</span><span class="exp-tag">Adobe Illustrator</span><span class="exp-tag">CorelDRAW</span><span class="exp-tag">Typography</span><span class="exp-tag">Print-Ready Files</span></div></div>
-      <div class="exp-card"><div class="exp-num">004</div><span class="exp-icon">✦</span><h3>Print Production</h3><p>End-to-end machine operation for sublimation, DTF, and sticker production. File prep, color management, quality control.</p><div class="exp-stack"><span class="exp-tag">Full Sublimation</span><span class="exp-tag">Spot Sublimation</span><span class="exp-tag">DTF Printing</span><span class="exp-tag">Sticker Print</span><span class="exp-tag">UV Prints</span></div></div>
-      <div class="exp-card"><div class="exp-num">005</div><span class="exp-icon">✦</span><h3>Database Design</h3><p>Designing logical data structures and schemas. Can model ERDs, write SQL queries, and implement basic back-end logic.</p><div class="exp-stack"><span class="exp-tag">MySQL</span><span class="exp-tag">ERD</span><span class="exp-tag">SQL</span><span class="exp-tag">Schema Design</span><span class="exp-tag">PHP</span></div></div>
-      <div class="exp-card"><div class="exp-num">006</div><span class="exp-icon">✦</span><h3>Systems Analysis</h3><p>Documenting requirements, creating system flowcharts, and producing technical documentation. Comfortable with the full SDLC.</p><div class="exp-stack"><span class="exp-tag">Flowcharts</span><span class="exp-tag">Use Cases</span><span class="exp-tag">Documentation</span><span class="exp-tag">SDLC</span></div></div>
-    </div>
-  </div>
-</section>
-
 <!-- WORK -->
 <section id="work">
   <div class="section-inner">
-    <div class="s-label">04 — Selected Work</div>
+    <div class="s-label">03 — Selected Work</div>
     <div class="s-title"><em>Projects</em> &amp; outputs</div>
     <div class="work-list reveal">
       <div class="work-item"><div class="work-num">001</div><div><div class="work-type">Web Development & UI/UX Design</div><div class="work-title">Capstone Project  |  Academic System  |  Website Mockup</div><div class="work-desc">A different web-based system built during coursework like a centralized scheduling platform. A complete design project from wireframes to high-fidelity prototype.</div></div><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">JavaScript</span><span class="work-tag">PHP</span><span class="work-tag">Bootstrap</span><span class="work-tag">MySQL</span><span class="work-tag">Prototyping</span><span class="work-tag">Wireframing</span></div><div class="work-arrow">→</div></div>
@@ -1977,7 +2017,7 @@ footer{
 <!-- EXPERIENCE -->
 <section id="experience">
   <div class="section-inner">
-    <div class="s-label">05 — Background</div>
+    <div class="s-label">04 — Background</div>
     <div class="s-title"><em>Experience</em> &amp; education</div>
     <div class="exp-timeline reveal">
       <div>
@@ -2063,7 +2103,7 @@ footer{
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-inner">
-    <div class="s-label">06 — Contact</div>
+    <div class="s-label">05 — Contact</div>
     <div class="contact-grid">
       <div class="contact-cta reveal">
         <h2>Let's build something <em>great</em> together.</h2>
@@ -2075,13 +2115,6 @@ footer{
           <a href="Resume - Silvano.pdf" class="c-link"><span class="c-link-icon">↓</span>Download Resume</a>
         </div>
       </div>
-      <form class="contact-form reveal" onsubmit="return false;">
-        <div class="f-group"><label for="name">Name</label><input type="text" id="name" placeholder="Anne Sophia Silvano" autocomplete="name"></div>
-        <div class="f-group"><label for="email">Email</label><input type="email" id="email" placeholder="annesophiasilvano407@gmail.com" autocomplete="email"></div>
-        <div class="f-group"><label for="subject">Subject</label><input type="text" id="subject" placeholder="Job opportunity"></div>
-        <div class="f-group"><label for="msg">Message</label><textarea id="msg" placeholder="Tell me about the opportunity"></textarea></div>
-        <button type="submit" class="f-submit">Send Message →</button>
-      </form>
     </div>
   </div>
 </section>
@@ -2089,7 +2122,7 @@ footer{
 <!-- FOOTER -->
 <footer>
   <span class="footer-copy">© 2025 Anne Sophia Silvano · Bachelor of Science in Information Technology · Ormoc City, PH</span>
-  <span class="footer-sig">Designed &amp; built by Phia.</span>
+  <span class="footer-sig">Designed &amp; built by Phiaslvn.</span>
   <span class="footer-copy"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:inherit;text-decoration:none">↑ Top</a></span>
 </footer>
 
@@ -2121,7 +2154,7 @@ document.addEventListener('mousemove',e=>{
   ring.style.left=rx+'px';ring.style.top=ry+'px';
   requestAnimationFrame(animRing);
 })();
-document.querySelectorAll('a,button,.skill-cat,.work-item,.exp-card').forEach(el=>{
+document.querySelectorAll('a,button,.skill-cat,.work-item').forEach(el=>{
   el.addEventListener('mouseenter',()=>{
     cursor.style.width='14px';cursor.style.height='14px';
     ring.style.width='48px';ring.style.height='48px';
@@ -2146,11 +2179,40 @@ const obs=new IntersectionObserver(entries=>{
 },{threshold:0.08});
 revealEls.forEach(el=>obs.observe(el));
 
-document.querySelectorAll('.exp-card,.skill-cat,.work-item,.tl-entry').forEach((el,i)=>{
+document.querySelectorAll('.skill-cat,.work-item,.tl-entry').forEach((el,i)=>{
   el.classList.add('reveal');
   el.style.transitionDelay=`${(i%4)*0.08}s`;
   obs.observe(el);
 });
+
+// Competency gauge animation (arc fill + number count-up)
+const gaugeObs=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const card=entry.target;
+    const fillPath=card.querySelector('.gauge-fill');
+    const scoreEl=card.querySelector('.gauge-score');
+    if(fillPath){
+      const target=fillPath.dataset.fill;
+      requestAnimationFrame(()=>{ fillPath.setAttribute('stroke-dasharray', `${target} 263.9`); });
+    }
+    if(scoreEl){
+      const target=parseInt(scoreEl.dataset.score,10)||0;
+      const duration=1200;
+      const start=performance.now();
+      const step=now=>{
+        const progress=Math.min((now-start)/duration,1);
+        const eased=1-Math.pow(1-progress,3);
+        scoreEl.textContent=Math.round(target*eased);
+        if(progress<1) requestAnimationFrame(step);
+        else scoreEl.textContent=target;
+      };
+      requestAnimationFrame(step);
+    }
+    gaugeObs.unobserve(card);
+  });
+},{threshold:0.4});
+document.querySelectorAll('#skills .skill-cat').forEach(card=>gaugeObs.observe(card));
 
 document.querySelectorAll('a[href^="#"]:not(.gallery-card-read)').forEach(a=>{
   a.addEventListener('click',e=>{
